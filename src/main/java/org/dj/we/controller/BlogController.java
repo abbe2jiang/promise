@@ -1,7 +1,6 @@
 package org.dj.we.controller;
 
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.dj.we.controller.vo.BlogVo;
 import org.dj.we.domain.Author;
 import org.dj.we.domain.Blog;
@@ -27,7 +26,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Controller
 public class BlogController {
 
@@ -57,25 +55,21 @@ public class BlogController {
 
     @PostMapping("/blog")
     @ResponseBody
-    public Response addBlog(@RequestBody BlogRequest blogRequest, Author user) {
-        Category category = categoryService.getOrDefault(blogRequest.category, getDefaultCategory(user));
+    public Response<Object> addBlog(@RequestBody BlogRequest blogRequest, Author user) {
+        Category category =
+                categoryService.getOrDefault(blogRequest.category, getDefaultCategory(user));
 
         String url = blogRequest.profile;
         Image profile = Image.builder().url(url).build();
 
-        String compressUrl = imageService.thumbnail(url,0.5);
-        if(compressUrl!=null){
+        String compressUrl = imageService.thumbnail(url, 0.5);
+        if (compressUrl != null) {
             profile.setCompressUrl(compressUrl);
         }
 
-        Blog blog = Blog.builder()
-                .authorId(user.getId())
-                .profile(profile)
-                .categoryId(category.getId())
-                .title(blogRequest.title)
-                .content(blogRequest.content)
-                .time(System.currentTimeMillis())
-                .build();
+        Blog blog = Blog.builder().authorId(user.getId()).profile(profile)
+                .categoryId(category.getId()).title(blogRequest.title).content(blogRequest.content)
+                .time(System.currentTimeMillis()).build();
         blogService.add(blog);
         categoryService.updateCount(category.getId());
         return Response.succeed(null);
@@ -84,7 +78,7 @@ public class BlogController {
 
     @GetMapping("/blogs/{page:\\d+}")
     @ResponseBody
-    public Response getBlogs(@PathVariable int page) {
+    public Response<Pagination<BlogVo>> getBlogs(@PathVariable int page) {
         Pageable pageable = PageRequest.of(page - 1, 8);
         Pagination<Blog> pagination = blogService.getBlogs(pageable);
         List<BlogVo> data = blogVoOf(pagination.getData());
@@ -93,7 +87,8 @@ public class BlogController {
 
     @GetMapping("/blogs/user/{userId:\\w+}/{page:\\d+}")
     @ResponseBody
-    public Response getBlogsByUser(@PathVariable String userId, @PathVariable int page) {
+    public Response<Pagination<BlogVo>> getBlogsByUser(@PathVariable String userId,
+            @PathVariable int page) {
         Pageable pageable = PageRequest.of(page - 1, 5);
         Pagination<Blog> pagination = blogService.getBlogsByAuthorId(pageable, userId);
         List<BlogVo> data = blogVoOf(pagination.getData());
@@ -102,7 +97,8 @@ public class BlogController {
 
     @GetMapping("/blogs/category/{categoryId:\\w+}/{page:\\d+}")
     @ResponseBody
-    public Response getBlogsByCategory(@PathVariable String categoryId, @PathVariable int page) {
+    public Response<Pagination<BlogVo>> getBlogsByCategory(@PathVariable String categoryId,
+            @PathVariable int page) {
         Pageable pageable = PageRequest.of(page - 1, 10);
         Pagination<Blog> pagination = blogService.getBlogsByCategoryId(pageable, categoryId);
         List<BlogVo> data = blogVoOf(pagination.getData());
@@ -112,10 +108,10 @@ public class BlogController {
 
 
     private List<BlogVo> blogVoOf(List<Blog> blogs) {
-        return blogVoOf(blogs,true);
+        return blogVoOf(blogs, true);
     }
 
-    private List<BlogVo> blogVoOf(List<Blog> blogs,Boolean simplified) {
+    private List<BlogVo> blogVoOf(List<Blog> blogs, Boolean simplified) {
         List<String> authorIds = new ArrayList<>();
         List<String> categoryIds = new ArrayList<>();
         for (Blog blog : blogs) {
@@ -125,8 +121,10 @@ public class BlogController {
         List<Author> authors = authorService.getAuthors(authorIds);
         List<Category> categories = categoryService.getCategories(categoryIds);
 
-        Map<String, Author> authorMap = authors.stream().collect(Collectors.toMap(Author::getId, a -> a));
-        Map<String, Category> categoryMap = categories.stream().collect(Collectors.toMap(Category::getId, a -> a));
+        Map<String, Author> authorMap =
+                authors.stream().collect(Collectors.toMap(Author::getId, a -> a));
+        Map<String, Category> categoryMap =
+                categories.stream().collect(Collectors.toMap(Category::getId, a -> a));
         return blogs.stream().map(blog -> {
             Author author = authorMap.get(blog.getAuthorId());
             Category category = categoryMap.get(blog.getCategoryId());
@@ -136,11 +134,7 @@ public class BlogController {
 
 
     private Category getDefaultCategory(Author user) {
-        return Category.builder()
-                .id(user.getId())
-                .authorId(user.getId())
-                .name("Default")
-                .count(0)
+        return Category.builder().id(user.getId()).authorId(user.getId()).name("Default").count(0)
                 .build();
     }
 
@@ -158,7 +152,7 @@ public class BlogController {
 
         Pageable pageable = PageRequest.of(0, 3);
         Pagination<Blog> pagination = blogService.getBlogs(pageable);
-        model.addAttribute("homeSliders",blogVoOf(pagination.getData()));
+        model.addAttribute("homeSliders", blogVoOf(pagination.getData()));
         return "home";
     }
 
@@ -233,7 +227,7 @@ public class BlogController {
 
     @PostMapping("/blog/{id:\\w+}")
     @ResponseBody
-    public Response getBlog(@PathVariable String id) {
+    public Response<BlogVo> getBlog(@PathVariable String id) {
         Blog blog = blogService.getBlog(id);
         Author author = authorService.getAuthorById(blog.getAuthorId());
         Category category = categoryService.getCategoryById(blog.getCategoryId());

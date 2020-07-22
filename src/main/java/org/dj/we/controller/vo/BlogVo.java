@@ -10,9 +10,6 @@ import org.dj.we.domain.Image;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Data
 public class BlogVo {
@@ -28,10 +25,10 @@ public class BlogVo {
     private static DateFormat dateFormat = new SimpleDateFormat("MMM dd, YYYY");
 
     public static BlogVo of(Blog blog, Author author, Category category) {
-        return of(blog,author,category,false);
+        return of(blog, author, category, false);
     }
 
-    public static BlogVo of(Blog blog, Author author, Category category,Boolean simplified ) {
+    public static BlogVo of(Blog blog, Author author, Category category, Boolean simplified) {
         BlogVo vo = new BlogVo();
         vo.id = blog.getId();
         vo.author = author;
@@ -40,7 +37,7 @@ public class BlogVo {
         vo.title = blog.getTitle();
         vo.comments = blog.getComments();
         vo.date = dateFormat.format(new Date(blog.getTime()));
-        if (!simplified){
+        if (!simplified) {
             vo.content = blog.getContent();
         }
         return vo;

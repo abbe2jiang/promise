@@ -14,16 +14,16 @@ public class Pagination<T> {
 
 
     public static <T> Pagination<T> of(List<T> data, Pageable pageable, long total) {
-        Pagination pagination = new Pagination<T>();
-        pagination.page = pageable.getPageNumber()+1;
+        Pagination<T> pagination = new Pagination<T>();
+        pagination.page = pageable.getPageNumber() + 1;
         pagination.size = pageable.getPageSize();
         pagination.data = data;
         pagination.total = total;
         return pagination;
     }
 
-    public <E> Pagination<E>  updateData(List<E> data){
-        Pagination pagination = new Pagination<E>();
+    public <E> Pagination<E> updateData(List<E> data) {
+        Pagination<E> pagination = new Pagination<E>();
         pagination.page = page;
         pagination.size = size;
         pagination.data = data;

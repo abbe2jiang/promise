@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class CategoryService {
@@ -57,6 +56,7 @@ public class CategoryService {
 
     public void updateCount(String id) {
         long count = blogMongoRepository.countByCategoryId(id);
-        template.updateFirst(Query.query(Criteria.where("id").is(id)), Update.update("count", count), Category.class);
+        template.updateFirst(Query.query(Criteria.where("id").is(id)),
+                Update.update("count", count), Category.class);
     }
 }

@@ -6,11 +6,11 @@ import lombok.Data;
 public class Response<T> {
 
     public static <T> Response<T> succeed(T data) {
-        return new Response(true, data, null);
+        return new Response<T>(true, data, null);
     }
 
     public static <T> Response<T> fail(String error) {
-        return new Response(false, null, error);
+        return new Response<T>(false, null, error);
     }
 
     private boolean success;

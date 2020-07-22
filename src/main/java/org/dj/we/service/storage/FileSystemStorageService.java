@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Path store(MultipartFile file, Path path,String fileName) throws StorageException {
+    public Path store(MultipartFile file, Path path, String fileName) throws StorageException {
 
         try {
 
@@ -57,8 +56,7 @@ public class FileSystemStorageService implements StorageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new StorageFileNotFoundException(
-                        "Could not read file: " + filePath);
+                throw new StorageFileNotFoundException("Could not read file: " + filePath);
 
             }
         } catch (MalformedURLException e) {
@@ -67,7 +65,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Path getPath(Path path){
+    public Path getPath(Path path) {
         return rootLocation.resolve(path);
     }
 

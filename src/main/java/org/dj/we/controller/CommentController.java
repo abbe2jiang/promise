@@ -1,7 +1,6 @@
 package org.dj.we.controller;
 
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.dj.we.controller.vo.CommentVo;
 import org.dj.we.domain.Author;
 import org.dj.we.domain.Blog;
@@ -23,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Controller
 public class CommentController {
     @Autowired
@@ -37,7 +35,7 @@ public class CommentController {
 
     @PostMapping("/comment")
     @ResponseBody
-    public Response addComment(@RequestBody CommentRequest commentRequest, Author user) {
+    public Response<Object> addComment(@RequestBody CommentRequest commentRequest, Author user) {
         Blog blog = blogService.getBlog(commentRequest.getBlogId());
         if (blog == null) {
             return Response.fail("error blog id");
@@ -53,13 +51,10 @@ public class CommentController {
             replyAuthor = authorService.getAuthorById(replyComment.getAuthorId());
         }
 
-        Comment comment = Comment.builder()
-                .authorId(user.getId())
-                .blogId(commentRequest.getBlogId())
-                .content(commentRequest.content)
+        Comment comment = Comment.builder().authorId(user.getId())
+                .blogId(commentRequest.getBlogId()).content(commentRequest.content)
                 .reply(Comment.createReply(replyComment, replyAuthor))
-                .time(System.currentTimeMillis())
-                .build();
+                .time(System.currentTimeMillis()).build();
         commentService.add(comment);
         blogService.updateComments(commentRequest.getBlogId());
         return Response.succeed(null);
@@ -74,7 +69,7 @@ public class CommentController {
 
     @GetMapping("/comment/{blogId:\\w+}")
     @ResponseBody
-    public Response getComments(@PathVariable String blogId) {
+    public Response<Object> getComments(@PathVariable String blogId) {
         List<Comment> comments = commentService.getComments(blogId);
 
         return Response.succeed(CommentVoOf(comments));
@@ -87,7 +82,8 @@ public class CommentController {
         }
         List<Author> authors = authorService.getAuthors(authorIds);
 
-        Map<String, Author> authorMap = authors.stream().collect(Collectors.toMap(Author::getId, a -> a));
+        Map<String, Author> authorMap =
+                authors.stream().collect(Collectors.toMap(Author::getId, a -> a));
         return comments.stream().map(comment -> {
             Author author = authorMap.get(comment.getAuthorId());
             return CommentVo.of(comment, author);
