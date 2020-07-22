@@ -1,0 +1,56 @@
+<head>
+    <title>we</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300, 400,700|Inconsolata:400,700" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+
+    <link rel="stylesheet" href="/fonts/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="/fonts/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/fonts/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/fonts/flaticon/font/flaticon.css">
+
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/jquery-migrate-3.0.0.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/jquery.waypoints.min.js"></script>
+    <script src="/js/jquery.stellar.min.js"></script>
+    <script src="/js/common/myString.js"></script>
+    <script src="/js/common/template.js"></script>
+    <script src="/js/common/myAjax.js?12"></script>
+    <script src="/js/common/myPage.js"></script>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="_show_message" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="_show_message_body">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.IMAGE_MAX_SIZE = 5000000;
+        function showMessage(msg) {
+            $('#_show_message_body').html(msg)
+            $('#_show_message').modal('show')
+        }
+    </script>
+
+</head>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="fragment/_head"></head>
+<body>
+<div class="wrap">
+
+  <header role="banner" th:replace="fragment/_header"></header>
+  <!-- END header -->
+
+  <section class="site-section py-lg">
+    <div class="container">
+
+      <div class="row blog-entries element-animate">
+
+        <div class="col-md-12 col-lg-8 main-content">
+          <img th:src="${profileImage}" id="_blog_profile" alt="Image" class="img-fluid mb-5">
+          <h1 class="mb-4" id="_blog_title" th:text="${tempTitle}">click and edit title</h1>
+
+          <div class="pt-5">
+            <p>
+              Categories:
+              <select id="_blog_category">
+                <option value="Default">Default</option>
+              </select>
+              Operations:
+              <a id="_insert_image" href="javascript:void(0)"><i class="icon-picture"></i></a>
+              <a id="_blog_post" href="javascript:void(0)"><i class="icon-save"></i></a>
+            </p>
+          </div>
+
+
+          <div class="post-content-body" id="_blog_content">
+            <!-- blog content template -->
+            <p th:text="${tempContent}">click and edit blog</p>
+          </div>
+
+        </div>
+
+        <!-- END main-content -->
+
+        <div class="col-md-12 col-lg-4 sidebar" th:replace="fragment/_sidebar"></div>
+        <!-- END sidebar -->
+
+      </div>
+    </div>
+  </section>
+
+
+  <footer class="site-footer" th:replace="fragment/_footer"></footer>
+  <!-- END footer -->
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="_show_message" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="_show_message_body">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display: none" id="_files">
+  <input type="file" id="_file_blog_profile">
+  <input type="file" id="_file_1" multiple>
+</div>
+
+
+
+<script src="/js/main.js?v=2"></script>
+<script src="/js/blog-edit.js?v=1.6"></script>
+</body>
+</html>

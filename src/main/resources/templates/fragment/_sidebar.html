@@ -1,0 +1,62 @@
+<div class="col-md-12 col-lg-4 sidebar" xmlns:th="https://www.thymeleaf.org">
+    <div class="sidebar-box search-form-wrap">
+        <form action="#" class="search-form">
+            <div class="form-group">
+                <span class="icon fa fa-search"></span>
+                <input type="text" class="form-control" id="s" placeholder="Type a keyword and hit enter">
+            </div>
+        </form>
+    </div>
+    <!-- END sidebar-box -->
+    <div class="sidebar-box">
+        <div class="bio text-center">
+            <img th:src="${user.portrait.compressUrl}" id="_user_portrait" alt="Image" class="img-fluid">
+            <div class="bio-body">
+                <h2 ><span th:text="${user.firstName}" id="_user_first_name">firstName</span> <span th:text="${user.lastName}" id="_user_last_name">lastName</span></h2>
+                <p th:utext="${user.brief}" id="_user_brief">brief</p>
+                <p th:switch="${editFlag==true}">
+                    <a th:case="false" th:href="|/user/${user.id}|" class="btn btn-primary btn-sm rounded">Read my bio</a>
+                    <a th:case="true" id="_user_post" href="javascript:void(0)" class="btn btn-primary btn-sm rounded">Save my bio</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- END sidebar-box -->
+    <div class="sidebar-box">
+        <h3 class="heading">Popular Posts</h3>
+        <div class="post-entry-sidebar">
+            <ul>
+                <li th:each="blog : ${popularBlogs}">
+                    <a th:href="|/blog/${blog.id}|">
+                        <img th:src="${blog.profile.compressUrl}" alt="Image" class="mr-4">
+                        <div class="text">
+                            <h4 th:utext="${blog.title}">title</h4>
+                            <div class="post-meta">
+                                <span class="mr-2" th:text="${blog.date}">date </span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- END sidebar-box -->
+
+    <div class="sidebar-box">
+        <h3 class="heading">Categories
+            <a th:if="${editFlag}" id="_category_add" href="javascript:void(0)"> &nbsp;<i class="icon-plus"></i></a>
+            <a th:if="${editFlag}" id="_category_move" href="javascript:void(0)"> &nbsp;<i class="icon-move"></i></a>
+            <a th:if="${editFlag}" id="_category_delete" href="javascript:void(0)"> &nbsp;<i class="icon-remove"></i></a>
+        </h3>
+        <ul class="categories">
+            <li th:each="category : ${categories}">
+                <a th:href="|/category/${category.id}|" >[[${category.name}]] <span>([[${category.count}]])</span> </a>
+            </li>
+        </ul>
+    </div>
+    <!-- END sidebar-box -->
+
+</div>
+
+
+

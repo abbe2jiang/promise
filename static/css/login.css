@@ -1,0 +1,70 @@
+.login {
+    left: 50%;
+    margin-left: -150px;
+    margin-top: -155px;
+    position: absolute;
+    top: 50%;
+    width: 300px;
+}
+.login .page-header {
+    border-bottom: 1px solid #e0e0e0;
+    float: left;
+    margin: 0 0 20px;
+    padding: 0 0 10px;
+    width: 100%;
+}
+
+.login h1 {
+    color: #4c4c4c;
+    display: block;
+    float: left;
+    font-size: 32px;
+    font-weight: normal;
+    line-height: 35px;
+    margin: 0;
+    padding: 0;
+}
+
+.login h1 small {
+    color: #666;
+    display: block;
+    font-size: 11px;
+    line-height: 20px;
+}
+
+.login .msg {
+    font-family: "Segoe UI",arial,sans-serif;
+    font-size: 12px;
+}
+
+.login .row-form {
+    padding: 5px 0;
+    width: 300px;
+}
+
+.login input {
+    border: 1px solid #ccc;
+    border-radius: 0;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: #4c4c4c;
+    display: inline-block;
+    font-size: 12px;
+    height: 30px;
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.login .btn {
+    background: #009ad7 none repeat scroll 0 0;
+    border: 0 none;
+    border-radius: 0;
+    color: #f9f9f9;
+    margin-bottom: 3px;
+    text-shadow: none;
+}
+
+.login .floatright {
+    float: right;
+    margin: 7px 8px;
+}

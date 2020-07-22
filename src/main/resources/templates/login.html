@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <title>We</title>
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+<style type="text/css">
+
+</style>
+
+<div class="login">
+
+  <div class="page-header">
+    <h1>
+      Sign in
+      <small>Courage And Persistence</small>
+    </h1>
+  </div>
+  <form th:action="@{/login}" method="post">
+    <div class="row-fluid">
+      <div class="row-form">
+        <div class="span12">
+          <input type="text" name="username" placeholder="username"/>
+        </div>
+      </div>
+      <div class="row-form">
+        <div class="span12">
+          <input type="password" name="password" placeholder="password"/>
+        </div>
+      </div>
+      <div class="row-form">
+        <div class="span12 msg" th:if="${param.error}">Invalid username and password.</div>
+      </div>
+      <div class="row-form">
+        <div class="span12">
+          <button class="btn" id='signin'>
+            Sign in <span class="icon-arrow-next icon-white"></span>
+          </button>
+          <a href="#" class='floatright'>Sign up</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

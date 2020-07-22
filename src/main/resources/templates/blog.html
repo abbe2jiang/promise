@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="fragment/_head"></head>
+<body>
+
+<div class="wrap">
+
+  <header role="banner" th:replace="fragment/_header"></header>
+  <!-- END header -->
+
+  <section class="site-section py-lg">
+    <div class="container">
+
+      <div class="row blog-entries element-animate">
+
+        <div class="col-md-12 col-lg-8 main-content">
+          <img th:src="${blog.profile.url}" alt="Image" class="img-fluid mb-5">
+          <div class="post-meta">
+            <span class="author mr-2"><img th:src="${blog.author.portrait.url}" alt="author" class="mr-2"> <span
+                th:text="${blog.author.firstName}">name</span></span>&bullet;
+            <span class="mr-2" th:text="${blog.date}">date</span> &bullet;
+            <span class="ml-2"><span class="fa fa-comments"></span> <span th:text="${blog.comments}">0</span></span>
+          </div>
+          <h1 class="mb-4" th:utext="${blog.title}">title</h1>
+          <div th:if="${blog.category}">
+            <a class="category mb-5" href="#" th:text="${blog.category.name}">category</a>
+          </div>
+
+          <div class="post-content-body" th:utext="${blog.content}">
+            blog content
+          </div>
+
+
+          <div class="pt-5">
+            <h3 class="mb-5" th:text="|${blog.comments} Comments|">0 Comments</h3>
+            <ul class="comment-list">
+              <li class="comment" id="_sign_comment">
+                <div class="vcard">
+                  <img th:src="${myself.portrait.url}" alt="Image">
+                </div>
+                <div class="comment-body">
+                  <input type="hidden" id="_blog_id" th:value="${blog.id}"/>
+                  <input type="hidden" id="_blog_reply_id" value=""/>
+                  <h3 th:text="|${myself.firstName} ${myself.lastName}|">name</h3>
+                  <div class="meta" th:text="${commentDate}">Aug 22, 2019 at 5:21pm</div>
+                  <div class="replyDiv rounded" id="_blog_reply_div" style="display: none">
+                  </div>
+                  <textarea id="_blog_comment" cols="30" rows="10" class="form-control"></textarea>
+                  <p>
+                    <a href="javascript:void(0)" id="_post_comment" class="reply rounded">Post Comment</a>
+                    <a href="javascript:void(0)" id="_post_comment_cancel" class="reply rounded">cancel</a>
+                  </p>
+                </div>
+              </li>
+            </ul>
+            <!-- END comment-list -->
+          </div>
+
+        </div>
+
+        <!-- END main-content -->
+
+        <div class="col-md-12 col-lg-4 sidebar" th:replace="fragment/_sidebar"></div>
+        <!-- END sidebar -->
+
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2 class="mb-3 ">Related Post</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-lg-4" th:each="blog : ${relatedBlogs}">
+          <a th:href="|/blog/${blog.id}|" class="a-block sm d-flex align-items-center height-md"
+             th:style="|background-image: url('${blog.profile.compressUrl}'); |">
+            <div class="text">
+              <div class="post-meta">
+                <span class="category" th:text="${blog.category.name}">category</span>
+                <span class="mr-2" th:text="${blog.date}">date </span> &bullet;
+                <span class="ml-2"><span class="fa fa-comments"></span> [[${blog.comments}]]</span>
+              </div>
+              <h3 th:utext="${blog.title}">title</h3>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END section -->
+
+  <footer class="site-footer" th:replace="fragment/_footer"></footer>
+  <!-- END footer -->
+
+</div>
+
+
+
+<script src="/js/main.js"></script>
+<script src="/js/blog.js"></script>
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

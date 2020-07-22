@@ -1,0 +1,12 @@
+
+server.port: 1201
+
+spring.resources.static-locations: static/
+
+storage.location: uploadDir
+#image.host: http://127.0.0.1:1201
+
+spring.data.mongodb.uri: mongodb://127.0.0.1:27017/we
+
+spring.servlet.multipart.max-file-size: 3MB
+spring.servlet.multipart.max-request-size: 3MB
