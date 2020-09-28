@@ -79,7 +79,7 @@ public class ImageService {
 
                 String absoluteSrcFile = storageService.getPath(Paths.get(relativeSrcFile)).toString();
                 String absoluteDestFile = storageService.getPath(Paths.get(relativeDestFile)).toString();
-                Thumbnails.of(absoluteSrcFile).scale(scale).toFile(absoluteDestFile);
+                Thumbnails.of(absoluteSrcFile).size(300,200).toFile(absoluteDestFile);
                 return host + relativeDestFile;
             }
         } catch (IOException e) {
