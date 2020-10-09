@@ -48,6 +48,7 @@ public class ImageService {
       if (fileName.contains("..")) {
         return null;
       }
+      log.info("upload iamge:{}",fileName);
       String day = dateFormat.format(new Date());
       Path path = storageService.store(file, Paths.get(IMAGE_SIGN, day),
                                        user.getId() + fileName);

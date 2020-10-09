@@ -14,6 +14,8 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class FileSystemStorageService implements StorageService {
 
@@ -32,13 +34,16 @@ public class FileSystemStorageService implements StorageService {
 
       Path dir = rootLocation.resolve(path);
       if (Files.notExists(dir)) {
+        log.info("create directories: {}",dir);
         Files.createDirectories(dir);
       }
 
       Path relativePath = path.resolve(fileName);
 
       try (InputStream inputStream = file.getInputStream()) {
-        Files.copy(inputStream, this.rootLocation.resolve(relativePath),
+        Path filePath= this.rootLocation.resolve(relativePath);
+        log.info("copy file:{}",filePath.toString());
+        Files.copy(inputStream, filePath,
                    StandardCopyOption.REPLACE_EXISTING);
       }
       return relativePath;
