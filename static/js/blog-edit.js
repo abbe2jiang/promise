@@ -96,6 +96,7 @@
         if (window.uploadImageNo != window.uploadedImageNo) {
             // var no = window.uploadImageNo - window.uploadedImageNo;
             // showMessage(no + "images are uploading")
+            setLoaderMsg("uploading images:"+window.uploadedImageNo+"/"+window.uploadImageNo);
             return;
         }
         if (window.posted) {
