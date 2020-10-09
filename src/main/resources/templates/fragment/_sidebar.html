@@ -10,7 +10,7 @@
     <!-- END sidebar-box -->
     <div class="sidebar-box">
         <div class="bio text-center">
-            <img th:src="${user.portrait.compressUrl}" id="_user_portrait" alt="Image" class="img-fluid">
+            <img th:src="${user.portrait!=null?user.portrait.compressUrl:''}" id="_user_portrait" alt="Image" class="img-fluid">
             <div class="bio-body">
                 <h2 ><span th:text="${user.firstName}" id="_user_first_name">firstName</span> <span th:text="${user.lastName}" id="_user_last_name">lastName</span></h2>
                 <p th:utext="${user.brief}" id="_user_brief">brief</p>
@@ -28,7 +28,7 @@
             <ul>
                 <li th:each="blog : ${popularBlogs}">
                     <a th:href="|/blog/${blog.id}|">
-                        <img th:src="${blog.profile.compressUrl}" alt="Image" class="mr-4">
+                        <img th:src="${blog.profile!=null?blog.profile.compressUrl:''}" alt="Image" class="mr-4">
                         <div class="text">
                             <h4 th:utext="${blog.title}">title</h4>
                             <div class="post-meta">
