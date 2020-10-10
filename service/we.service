@@ -1,0 +1,14 @@
+# centos /etc/systemd/system/we.service
+[Unit]
+Description=we
+After=syslog.target
+
+[Service]
+WorkingDirectory=/workspace/we
+User=we
+Group=we
+ExecStart=/workspace/we/we.jar
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

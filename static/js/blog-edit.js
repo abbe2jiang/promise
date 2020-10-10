@@ -122,28 +122,32 @@
         window.uploadImageNo += files.length;
         for (var i = 0; i < files.length; i++) {
             var item = files[i];
-            var formData = new FormData();
-            formData.append('upload', item.file);
-            $.ajax({
-                url: "image/upload",
-                data: formData,
-                type: "POST",
-                dataType: "json",
-                cache: false,//上传文件无需缓存
-                processData: false,//用于对data参数进行序列化处理 这里必须false
-                contentType: false, //必须
-                mimeType: "multipart/form-data",
-                // async: false,
-                success: function (obj) {
-                    if (obj.success) {
-                        $("#" + item.id).attr("src", obj.url);
-                        window.uploadedImageNo += 1;
-                    } else {
-                        alert("upload error")
-                    }
-                },
-            })
+            uploadImage(item);//不能写在同一个函数中 ajax success变量会覆盖
         }
+    }
+
+    function uploadImage(item){
+        var formData = new FormData();
+        formData.append('upload', item.file);
+        $.ajax({
+            url: "image/upload",
+            data: formData,
+            type: "POST",
+            dataType: "json",
+            cache: false,//上传文件无需缓存
+            processData: false,//用于对data参数进行序列化处理 这里必须false
+            contentType: false, //必须
+            mimeType: "multipart/form-data",
+            // async: false,
+            success: function (obj) {
+                if (obj.success) {
+                    $("#" + item.id).attr("src", obj.url);
+                    window.uploadedImageNo += 1;
+                } else {
+                    alert("upload error")
+                }
+            },
+        })
     }
 
     function showImage(obj, dev, fileNo) {
