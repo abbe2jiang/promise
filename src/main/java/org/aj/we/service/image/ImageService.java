@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
+
 import org.aj.we.domain.Author;
 import org.aj.we.properties.ImageProperties;
 import org.aj.we.service.storage.StorageException;
@@ -81,7 +83,7 @@ public class ImageService {
             storageService.getPath(Paths.get(relativeSrcFile)).toString();
         String absoluteDestFile =
             storageService.getPath(Paths.get(relativeDestFile)).toString();
-        Thumbnails.of(absoluteSrcFile).size(350, 220).keepAspectRatio(false).toFile(absoluteDestFile);
+        Thumbnails.of(absoluteSrcFile).sourceRegion(Positions.CENTER, 700, 440).size(350, 220).keepAspectRatio(false).toFile(absoluteDestFile);
         return host + relativeDestFile;
       }
     } catch (IOException e) {
