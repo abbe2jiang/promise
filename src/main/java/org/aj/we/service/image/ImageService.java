@@ -1,14 +1,26 @@
 package org.aj.we.service.image;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
+
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Coordinate;
 import net.coobird.thumbnailator.geometry.Positions;
+import net.coobird.thumbnailator.util.BufferedImages;
+import net.coobird.thumbnailator.Thumbnails.Builder;
 
 import org.aj.we.domain.Author;
 import org.aj.we.properties.ImageProperties;
@@ -29,7 +41,8 @@ public class ImageService {
 
   private static DateFormat dateFormat = new SimpleDateFormat("MMddYYYY");
 
-  @Autowired private StorageService storageService;
+  @Autowired
+  private StorageService storageService;
 
   @Autowired
   public ImageService(ImageProperties properties) {
@@ -50,10 +63,9 @@ public class ImageService {
       if (fileName.contains("..")) {
         return null;
       }
-      log.info("upload iamge:{}",fileName);
+      log.info("upload iamge:{}", fileName);
       String day = dateFormat.format(new Date());
-      Path path = storageService.store(file, Paths.get(IMAGE_SIGN, day),
-                                       user.getId() + fileName);
+      Path path = storageService.store(file, Paths.get(IMAGE_SIGN, day), user.getId() + fileName);
       return imageHost + path.toString();
     } catch (StorageException e) {
       log.error("upload image failed", e);
@@ -79,11 +91,22 @@ public class ImageService {
         String relativeSrcFile = Paths.get(IMAGE_SIGN, items[1]).toString();
         String relativeDestFile = getDestFile(relativeSrcFile);
 
-        String absoluteSrcFile =
-            storageService.getPath(Paths.get(relativeSrcFile)).toString();
-        String absoluteDestFile =
-            storageService.getPath(Paths.get(relativeDestFile)).toString();
-        Thumbnails.of(absoluteSrcFile).sourceRegion(Positions.CENTER, 700, 440).size(350, 220).keepAspectRatio(false).toFile(absoluteDestFile);
+        String absoluteSrcFile = storageService.getPath(Paths.get(relativeSrcFile)).toString();
+        String absoluteDestFile = storageService.getPath(Paths.get(relativeDestFile)).toString();
+
+        BufferedImage image = ImageIO.read(new File(absoluteSrcFile));
+        int width = 350;
+        int height = 220;
+        double rate = (double) height / width;
+        Builder<File> builder = Thumbnails.of(absoluteSrcFile);
+        int rWidth = image.getWidth();
+        int rHeight = image.getHeight();
+        if ((double) rHeight / rWidth > rate) { // 太高
+          rHeight = (int) (rWidth * rate);
+        } else { // 太宽
+          rWidth = (int) (rHeight / rate);
+        }
+        builder.sourceRegion(Positions.CENTER, rWidth, rHeight).forceSize(width, height).toFile(absoluteDestFile);
         return host + relativeDestFile;
       }
     } catch (IOException e) {
@@ -94,7 +117,6 @@ public class ImageService {
 
   private String getDestFile(String srcFile) {
     int i = srcFile.lastIndexOf(".");
-    return srcFile.substring(0, i) + "-thumbnail" +
-        srcFile.substring(i, srcFile.length());
+    return srcFile.substring(0, i) + "-thumbnail" + srcFile.substring(i, srcFile.length());
   }
 }
