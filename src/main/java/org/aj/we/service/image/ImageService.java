@@ -1,26 +1,17 @@
 package org.aj.we.service.image;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.awt.image.BufferedImage;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.FileImageInputStream;
-import javax.imageio.stream.ImageInputStream;
-
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.geometry.Coordinate;
 import net.coobird.thumbnailator.geometry.Positions;
-import net.coobird.thumbnailator.util.BufferedImages;
-import net.coobird.thumbnailator.Thumbnails.Builder;
 
 import org.aj.we.domain.Author;
 import org.aj.we.properties.ImageProperties;
@@ -94,11 +85,12 @@ public class ImageService {
         String absoluteSrcFile = storageService.getPath(Paths.get(relativeSrcFile)).toString();
         String absoluteDestFile = storageService.getPath(Paths.get(relativeDestFile)).toString();
 
-        BufferedImage image = ImageIO.read(new File(absoluteSrcFile));
+        // 避免 iOS 旋转
+        BufferedImage image = Thumbnails.of(absoluteSrcFile).useExifOrientation(true).scale(1).asBufferedImage();
+
         int width = 350;
         int height = 220;
         double rate = (double) height / width;
-        Builder<File> builder = Thumbnails.of(absoluteSrcFile);
         int rWidth = image.getWidth();
         int rHeight = image.getHeight();
         if ((double) rHeight / rWidth > rate) { // 太高
@@ -106,13 +98,20 @@ public class ImageService {
         } else { // 太宽
           rWidth = (int) (rHeight / rate);
         }
-        builder.sourceRegion(Positions.CENTER, rWidth, rHeight).forceSize(width, height).toFile(absoluteDestFile);
+        Thumbnails.of(image).sourceRegion(Positions.CENTER, rWidth, rHeight).forceSize(width, height)
+            .toFile(absoluteDestFile);
         return host + relativeDestFile;
       }
     } catch (IOException e) {
       log.error("loadImage image failed", e);
     }
     return null;
+  }
+
+  @AllArgsConstructor
+  public static class Dimension {
+    public int width;
+    public int height;
   }
 
   private String getDestFile(String srcFile) {
