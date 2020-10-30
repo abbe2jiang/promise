@@ -22,7 +22,7 @@
                             <p>${reply.content}</p>
                           </div>
                           <p>${content}</p>
-                          <p><a href="javascript:void(0)" class="reply rounded _class_reply" _comment_id="${id}">Reply</a></p>
+                          <p><a href="javascript:void(0)" class="reply rounded _class_reply" _comment_id="${id}">回复</a></p>
                         </div>
                       </li>
                     */

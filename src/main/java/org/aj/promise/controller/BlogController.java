@@ -26,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import static org.aj.promise.constant.TitleConstant.TITLE_NOTES;
 
 @Controller
 public class BlogController {
@@ -53,6 +54,12 @@ public class BlogController {
   @ModelAttribute("myself")
   public Author myself(Author myself) {
     return myself;
+  }
+
+  @ModelAttribute("titleNote")
+  public String titleNote(Author myself) {
+    int num = random.nextInt(TITLE_NOTES.length);
+    return TITLE_NOTES[num];
   }
 
   @PostMapping("/blog")

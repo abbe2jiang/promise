@@ -1,49 +1,52 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
 <head>
-  <title>We</title>
+  <title>PROMISE</title>
   <link rel="stylesheet" href="/css/bootstrap.css">
   <link rel="stylesheet" href="/css/login.css">
 </head>
+
 <body>
-<style type="text/css">
+  <style type="text/css">
 
-</style>
+  </style>
 
-<div class="login">
+  <div class="login">
 
-  <div class="page-header">
-    <h1>
-      Sign in
-      <small>Courage And Persistence</small>
-    </h1>
-  </div>
-  <form th:action="@{/login}" method="post">
-    <div class="row-fluid">
-      <div class="row-form">
-        <div class="span12">
-          <input type="text" name="username" placeholder="username"/>
-        </div>
-      </div>
-      <div class="row-form">
-        <div class="span12">
-          <input type="password" name="password" placeholder="password"/>
-        </div>
-      </div>
-      <div class="row-form">
-        <div class="span12 msg" th:if="${param.error}">Invalid username and password.</div>
-      </div>
-      <div class="row-form">
-        <div class="span12">
-          <button class="btn" id='signin'>
-            Sign in <span class="icon-arrow-next icon-white"></span>
-          </button>
-          <a href="#" class='floatright'>Sign up</a>
-        </div>
-      </div>
+    <div class="page-header">
+      <h1>
+        登 录
+        <small>死生契阔，与子成说。执子之手，与子偕老。</small>
+      </h1>
     </div>
-  </form>
-</div>
+    <form th:action="@{/login}" method="post">
+      <div class="row-fluid">
+        <div class="row-form">
+          <div class="span12">
+            <input type="text" name="username" placeholder="username" />
+          </div>
+        </div>
+        <div class="row-form">
+          <div class="span12">
+            <input type="password" name="password" placeholder="password" />
+          </div>
+        </div>
+        <div class="row-form">
+          <div class="span12 msg" th:if="${param.error}">登录名或密码错误。</div>
+        </div>
+        <div class="row-form">
+          <div class="span12">
+            <button class="btn" id='signin'>
+              登 录 <span class="icon-arrow-next icon-white"></span>
+            </button>
+            <a href="#" class='floatright'>注 册</a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 
 </body>
+
 </html>

@@ -10,20 +10,23 @@
     <!-- END sidebar-box -->
     <div class="sidebar-box">
         <div class="bio text-center">
-            <img th:src="${user.portrait!=null?user.portrait.compressUrl:''}" id="_user_portrait" alt="Image" class="img-fluid">
+            <img th:src="${user.portrait!=null?user.portrait.compressUrl:''}" id="_user_portrait" alt="Image"
+                class="img-fluid">
             <div class="bio-body">
-                <h2 ><span th:text="${user.firstName}" id="_user_first_name">firstName</span> <span th:text="${user.lastName}" id="_user_last_name">lastName</span></h2>
+                <h2><span th:text="${user.firstName}" id="_user_first_name">名</span> <span th:text="${user.lastName}"
+                        id="_user_last_name">姓</span></h2>
                 <p th:utext="${user.brief}" id="_user_brief">brief</p>
                 <p th:switch="${editFlag==true}">
-                    <a th:case="false" th:href="|/user/${user.id}|" class="btn btn-primary btn-sm rounded">Read my bio</a>
-                    <a th:case="true" id="_user_post" href="javascript:void(0)" class="btn btn-primary btn-sm rounded">Save my bio</a>
+                    <a th:case="false" th:href="|/user/${user.id}|" class="btn btn-primary btn-sm rounded">阅读简介</a>
+                    <a th:case="true" id="_user_post" href="javascript:void(0)"
+                        class="btn btn-primary btn-sm rounded">保存简介</a>
                 </p>
             </div>
         </div>
     </div>
     <!-- END sidebar-box -->
     <div class="sidebar-box">
-        <h3 class="heading">Popular Posts</h3>
+        <h3 class="heading">热门</h3>
         <div class="post-entry-sidebar">
             <ul>
                 <li th:each="blog : ${popularBlogs}">
@@ -43,20 +46,18 @@
     <!-- END sidebar-box -->
 
     <div class="sidebar-box">
-        <h3 class="heading">Categories
+        <h3 class="heading">分类
             <a th:if="${editFlag}" id="_category_add" href="javascript:void(0)"> &nbsp;<i class="icon-plus"></i></a>
             <a th:if="${editFlag}" id="_category_move" href="javascript:void(0)"> &nbsp;<i class="icon-move"></i></a>
-            <a th:if="${editFlag}" id="_category_delete" href="javascript:void(0)"> &nbsp;<i class="icon-remove"></i></a>
+            <a th:if="${editFlag}" id="_category_delete" href="javascript:void(0)"> &nbsp;<i
+                    class="icon-remove"></i></a>
         </h3>
         <ul class="categories">
             <li th:each="category : ${categories}">
-                <a th:href="|/category/${category.id}|" >[[${category.name}]] <span>([[${category.count}]])</span> </a>
+                <a th:href="|/category/${category.id}|">[[${category.name}]] <span>([[${category.count}]])</span> </a>
             </li>
         </ul>
     </div>
     <!-- END sidebar-box -->
 
 </div>
-
-
-

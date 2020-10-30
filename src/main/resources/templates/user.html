@@ -1,165 +1,168 @@
 <!doctype html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
+
 <head th:replace="fragment/_head"></head>
+
 <body>
 
 
-<div class="wrap">
+  <div class="wrap">
 
-  <header role="banner" th:replace="fragment/_header"></header>
-  <!-- END header -->
+    <header role="banner" th:replace="fragment/_header"></header>
+    <!-- END header -->
 
-  <section class="site-section pt-5">
-    <div class="container">
+    <section class="site-section pt-5">
+      <div class="container">
 
-      <div class="row blog-entries">
-        <div class="col-md-12 col-lg-8 main-content">
+        <div class="row blog-entries">
+          <div class="col-md-12 col-lg-8 main-content">
 
-          <div class="row">
-            <div class="col-md-12">
-              <h2 class="mb-4" id="_bio_title" th:utext="${user.bio.title}">title</h2>
-              <p th:if="${editFlag}">
-                <a id="_insert_image" href="javascript:void(0)"><i class="icon-picture"></i></a>
-                <a id="_bio_post" href="javascript:void(0)"><i class="icon-save"></i></a>
-              </p>
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="mb-4" id="_bio_title" th:utext="${user.bio.title}">title</h2>
+                <p th:if="${editFlag}">
+                  <a id="_insert_image" href="javascript:void(0)"><i class="icon-picture"></i></a>
+                  <a id="_bio_post" href="javascript:void(0)"><i class="icon-save"></i></a>
+                </p>
+              </div>
+              <div class="col-md-12" id="_bio_content" th:utext="${user.bio.content}">
+                <p>content</p>
+              </div>
             </div>
-            <div class="col-md-12" id="_bio_content" th:utext="${user.bio.content}">
-              <p>content</p>
+
+            <div class="row mb-5 mt-5">
+              <div class="col-md-12 mb-5">
+                <h2 th:text="|${user.firstName} 最新提交|">My Latest Posts</h2>
+              </div>
+              <div class="col-md-12" id="divSign-my-latest">
+                <!--  template -->
+
+              </div>
             </div>
+
+            <div class="row mt-5">
+              <div class="col-md-12 text-center">
+                <nav aria-label="Page navigation" class="text-center" id="_blog_page">
+                  <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#">&lt;</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+
+
           </div>
 
-          <div class="row mb-5 mt-5">
-            <div class="col-md-12 mb-5">
-              <h2>My Latest Posts</h2>
-            </div>
-            <div class="col-md-12" id="divSign-my-latest">
-              <!--  template -->
+          <!-- END main-content -->
 
-            </div>
-          </div>
-
-          <div class="row mt-5">
-            <div class="col-md-12 text-center">
-              <nav aria-label="Page navigation" class="text-center" id="_blog_page">
-                <ul class="pagination">
-                  <li class="page-item"><a class="page-link" href="#">&lt;</a></li>
-                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-
+          <div class="col-md-12 col-lg-4 sidebar" th:replace="fragment/_sidebar"></div>
+          <!-- END sidebar -->
 
         </div>
-
-        <!-- END main-content -->
-
-        <div class="col-md-12 col-lg-4 sidebar" th:replace="fragment/_sidebar"></div>
-        <!-- END sidebar -->
-
       </div>
-    </div>
-  </section>
+    </section>
 
-  <footer class="site-footer" th:replace="fragment/_footer"></footer>
-  <!-- END footer -->
+    <footer class="site-footer" th:replace="fragment/_footer"></footer>
+    <!-- END footer -->
 
-</div>
+  </div>
 
-<!-- Modal -->
-<div class="modal fade" id="_modal_category_add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Category New</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <label>Category Name</label>
-        <input type="text" id="_category_name" class="form-control"/>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="_category_save_add">Save</button>
+  <!-- Modal -->
+  <div class="modal fade" id="_modal_category_add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Category New</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label>Category Name</label>
+          <input type="text" id="_category_name" class="form-control" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="_category_save_add">Save</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Modal -->
-<div class="modal fade" id="_modal_category_move" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
-     aria-hidden="true" xmlns:th="https://www.thymeleaf.org">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel2">Category Move</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+  <!-- Modal -->
+  <div class="modal fade" id="_modal_category_move" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+    aria-hidden="true" xmlns:th="https://www.thymeleaf.org">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel2">Category Move</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="col-md-12 form-group">
+            <label>Source Category</label>
+            <select id="_category_move_source_id">
+              <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">name
+              </option>
+            </select>
+          </div>
+          <div class="col-md-12 form-group">
+            <label>Target Category</label>
+            <select id="_category_move_target_id">
+              <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">name
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="_category_save_move">Move</button>
+        </div>
       </div>
-      <div class="modal-body">
-        <div class="col-md-12 form-group">
-          <label>Source Category</label>
-          <select id="_category_move_source_id">
-            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">name
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="_modal_category_delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3"
+    aria-hidden="true" xmlns:th="https://www.thymeleaf.org">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel3">Category Delete</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label>Delete Category</label>
+          <select id="_category_delete_id">
+            <option th:each="category : ${categories}" th:if="${category.count==0}" th:value="${category.id}"
+              th:text="${category.name}">name
             </option>
           </select>
         </div>
-        <div class="col-md-12 form-group">
-          <label>Target Category</label>
-          <select id="_category_move_target_id">
-            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">name
-            </option>
-          </select>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="_category_save_delete">Delete</button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="_category_save_move">Move</button>
-      </div>
     </div>
   </div>
-</div>
 
-<!-- Modal -->
-<div class="modal fade" id="_modal_category_delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3"
-     aria-hidden="true" xmlns:th="https://www.thymeleaf.org">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel3">Category Delete</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <label>Delete Category</label>
-        <select id="_category_delete_id">
-          <option th:each="category : ${categories}" th:if="${category.count==0}" th:value="${category.id}"
-                  th:text="${category.name}">name
-          </option>
-        </select>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="_category_save_delete">Delete</button>
-      </div>
-    </div>
+
+  <div style="display: none" id="_files">
+    <input type="text" th:value="${user.id}" id="_user_id">
+    <input type="file" id="_file_user_portrait">
+    <input type="file" id="_file_1" multiple>
   </div>
-</div>
 
-
-<div style="display: none" id="_files">
-  <input type="text" th:value="${user.id}" id="_user_id">
-  <input type="file" id="_file_user_portrait">
-  <input type="file" id="_file_1" multiple>
-</div>
-
-<script src="/js/main.js"></script>
-<script src="/js/user.js?v=1"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/user.js?v=1"></script>
 </body>
+
 </html>

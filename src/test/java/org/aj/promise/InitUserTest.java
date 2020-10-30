@@ -1,4 +1,4 @@
-package org.aj.we;
+package org.aj.promise;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Slf4j
 @SpringBootTest
 @RunWith(SpringRunner.class)
-@Ignore
+// @Ignore
 public class InitUserTest {
   @Autowired
   private AuthorService authorService;
@@ -30,7 +30,7 @@ public class InitUserTest {
       String username = "admin";
       String password = passwordEncoder.encode("111111");
       author = Author.builder().username(username).password(password).bio(new Author.Bio()).portrait(new Image())
-          .build();
+          .firstName("firstName").lastName("lastName").build();
       authorService.add(author);
     }
     log.info("auuthor={}", author);
