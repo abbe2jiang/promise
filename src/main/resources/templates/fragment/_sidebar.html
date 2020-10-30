@@ -15,7 +15,7 @@
             <div class="bio-body">
                 <h2><span th:text="${user.firstName}" id="_user_first_name">名</span> <span th:text="${user.lastName}"
                         id="_user_last_name">姓</span></h2>
-                <p th:utext="${user.brief}" id="_user_brief">brief</p>
+                <div th:utext="${user.brief}" id="_user_brief">brief</div>
                 <p th:switch="${editFlag==true}">
                     <a th:case="false" th:href="|/user/${user.id}|" class="btn btn-primary btn-sm rounded">阅读简介</a>
                     <a th:case="true" id="_user_post" href="javascript:void(0)"

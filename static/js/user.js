@@ -164,10 +164,10 @@
     }
 
     function initUser() {
-        if ($("#_user_first_name").html().length < 3) {
+        if ($("#_user_first_name").html().length < 1) {
             $("#_user_first_name").html('FName')
         }
-        if ($("#_user_last_name").html().length < 3) {
+        if ($("#_user_first_name").html().length < 1 && $("#_user_last_name").html().length < 1) {
             $("#_user_last_name").html('LName')
         }
         if ($("#_user_brief").html().length < 3) {
