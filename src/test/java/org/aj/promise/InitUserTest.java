@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Slf4j
 @SpringBootTest
 @RunWith(SpringRunner.class)
-// @Ignore
+@Ignore
 public class InitUserTest {
   @Autowired
   private AuthorService authorService;
