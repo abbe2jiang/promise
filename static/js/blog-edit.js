@@ -185,7 +185,8 @@
         var html = '<div class="row mb-5"  id="_image_div_' + fileNo + '">\n';
 
         for (var i = 0; i < items.length; i++) {
-            var col = i == 0 && items.length % 2 == 1 ? "col-md-12" : "col-md-6";
+            // var col = i == 0 && items.length % 2 == 1 ? "col-md-12" : "col-md-6";
+            var col = "col-md-12";
             html += '<div class="' + col + ' mb-4">\n' +
                 '<img src="' + items[i].url + '"  alt="Image" class="img-fluid" id="' + items[i].id + '">\n' +
                 '</div>\n';

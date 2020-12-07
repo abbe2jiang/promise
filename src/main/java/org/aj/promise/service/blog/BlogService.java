@@ -34,21 +34,21 @@ public class BlogService {
 
   public Pagination<Blog> getBlogs(Pageable pageable) {
     Query query = new Query();
-    query.with(new Sort(Sort.Direction.DESC, "time"));
+    query.with(new Sort(Sort.Direction.DESC, "updateTime"));
     return basePagination(pageable, query);
   }
 
   public Pagination<Blog> getBlogsByAuthorId(Pageable pageable, String authorId) {
     Criteria criteria = Criteria.where("authorId").is(authorId);
     Query query = Query.query(criteria);
-    query.with(new Sort(Sort.Direction.DESC, "time"));
+    query.with(new Sort(Sort.Direction.DESC, "updateTime"));
     return basePagination(pageable, query);
   }
 
   public Pagination<Blog> getBlogsByCategoryId(Pageable pageable, String categoryId) {
     Criteria criteria = Criteria.where("categoryId").is(categoryId);
     Query query = Query.query(criteria);
-    query.with(new Sort(Sort.Direction.DESC, "time"));
+    query.with(new Sort(Sort.Direction.DESC, "updateTime"));
     return basePagination(pageable, query);
   }
 
@@ -81,7 +81,9 @@ public class BlogService {
 
   public void updateComments(String blogId) {
     long count = commentMongoRepository.countByBlogId(blogId);
-    template.updateFirst(Query.query(Criteria.where("id").is(blogId)), Update.update("comments", count), Blog.class);
+    Update update = Update.update("comments", count);
+    update.set("updateTime", System.currentTimeMillis());
+    template.updateFirst(Query.query(Criteria.where("id").is(blogId)), update, Blog.class);
   }
 
   public void updateCategory(String sourceCategoryId, String targetCategoryId) {

@@ -1,5 +1,5 @@
 (function ($) {
-    myLatest(1);
+    myLatest();
     if ($("#_user_post").length > 0) {
         document.execCommand('defaultParagraphSeparator', false, 'p');
 
@@ -82,6 +82,17 @@
     }
 
     function myLatest(page) {
+        let isInit = false;
+        if(page==undefined){
+          page = 1;
+          isInit = true;
+          let userPage = localStorage.userPage;
+          if(userPage!=undefined){
+            page = userPage;
+          }
+        }
+        localStorage.userPage = page;
+        
         var template = HTemplate(function () {/*
                     <div class="post-entry-horzontal">
                         <a href="/blog/${id}">
@@ -108,6 +119,13 @@
                 }
                 $("#divSign-my-latest").html(html);
                 HPage.init("_blog_page", myLatest, pagination);
+
+                if(!isInit){
+                    window.scrollTo({ 
+                      top: $('#divSign-my-latest').position().top, 
+                      behavior: "smooth" 
+                    });
+                }
             }
         }
         var userId = $("#_user_id").val();

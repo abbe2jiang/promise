@@ -1,6 +1,17 @@
 (function($) {
-    latest(1);
+    latest();
     function latest(page) {
+        let isInit = false;
+        if(page==undefined){
+          isInit = true;
+          page = 1;
+          let homePage = localStorage.homePage;
+          if(homePage!=undefined){
+            page = homePage;
+          }
+        }
+        localStorage.homePage = page;
+
         var template = HTemplate(function () {/*
                     <div class="col-md-6">
                       <a href="/blog/${id}" class="blog-entry element-animate" data-animate-effect="fadeIn">
@@ -28,8 +39,15 @@
                 $("#divSign-latest").html(html);
                 contentWayPoint();
                 HPage.init("_blog_page", latest, pagination);
+                if(!isInit){
+                  window.scrollTo({ 
+                    top: $('#latest-section').position().top, 
+                    behavior: "smooth" 
+                  });
+                }
             }
         }
+        
         HAjax.jsonGet("/blogs/"+page,success);
     }
 

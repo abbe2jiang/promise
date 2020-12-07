@@ -1,7 +1,18 @@
 (function ($) {
-    getByCategory(1);
+    getByCategory();
 
     function getByCategory(page) {
+        let isInit = false;
+        if(page==undefined){
+          page = 1;
+          isInit = true;
+          let categoryPage = localStorage.categoryPage;
+          if(categoryPage!=undefined){
+            page = categoryPage;
+          }
+        }
+        localStorage.categoryPage = page;
+
         var template = HTemplate(function () {/*
                       <div class="post-entry-horzontal">
                         <a href="/blog/${id}">
@@ -30,6 +41,12 @@
                 $("#divSign-categories").html(html);
                 contentWayPoint();
                 HPage.init("_blog_page", getByCategory, pagination);
+                if(!isInit){
+                    window.scrollTo({ 
+                      top: $('#category-latest-section').position().top, 
+                      behavior: "smooth" 
+                    });
+                }
             }
         }
         var categoryId = $("#_category_id").val();

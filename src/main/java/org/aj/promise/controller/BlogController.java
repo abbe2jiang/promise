@@ -81,7 +81,8 @@ public class BlogController {
     }
 
     Blog blog = Blog.builder().authorId(user.getId()).profile(profile).categoryId(category.getId())
-        .title(blogRequest.title).content(blogRequest.content).time(System.currentTimeMillis()).build();
+        .title(blogRequest.title).content(blogRequest.content).time(System.currentTimeMillis())
+        .updateTime(System.currentTimeMillis()).build();
     blogService.add(blog);
     categoryService.updateCount(category.getId());
     return Response.succeed(null);

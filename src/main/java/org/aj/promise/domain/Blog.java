@@ -19,5 +19,7 @@ public class Blog {
   private String content;
   private long comments;
   @Indexed
+  private long updateTime;
+  @Indexed
   private long time;
 }
