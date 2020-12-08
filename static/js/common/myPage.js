@@ -26,18 +26,21 @@ var HPage = {
         var range = this.range;
         var preHtml = '';
         if (1 == range[0]) {
+            preHtml += '<li class="page-item"><a href="javascript:void(0)" class="page-link">&laquo;</a></li>';
             preHtml += '<li class="page-item"><a href="javascript:void(0)" class="page-link">&lt;</a></li>';
         } else {
-            preHtml += '<li class="page-item" ><a href="javascript:HPage.fun(1)" class="page-link">首页</a></li>';
-            preHtml += '<li class="page-item"><a href="javascript:HPage.showBegin();" class="page-link">&lt;</a></li>';
+            preHtml += '<li class="page-item"><a href="javascript:HPage.showBegin();" class="page-link">&laquo;</a></li>';
+            preHtml += '<li class="page-item"><a href="javascript:HPage.showPre();" class="page-link">&lt;</a></li>';
         }
         var nextHtml = '';
         if (this.pages == range[range.length - 1]) {
             nextHtml += '<li class="page-item"><a href="javascript:void(0)" class="page-link">&gt;</a></li>';
+            nextHtml += '<li class="page-item"><a href="javascript:void(0)" class="page-link">&raquo;</a></li>';
         } else {
-            nextHtml +=  '<li class="page-item"><a href="javascript:HPage.showEnd();" class="page-link">&gt;</a></li>';
-            nextHtml += '<li class="page-item" ><a href="javascript:HPage.fun(' + this.pages + ')" class="page-link">尾页</a></li>';
+            nextHtml +=  '<li class="page-item"><a href="javascript:HPage.showNext();" class="page-link">&gt;</a></li>';
+            nextHtml +=  '<li class="page-item"><a href="javascript:HPage.showEnd();" class="page-link">&raquo;</a></li>';
         }
+
         var html = '';
         for (var i = 0; i < range.length; i++) {
             if (range[i] == this.page) {
@@ -74,11 +77,11 @@ var HPage = {
         this.show();
     },
     showBegin: function(){
-        this.createRange(1,this.pages,this.len)
+        this.range = this.createRange(1,this.pages,this.len)
         this.show();
     },
     showEnd: function(){
-        this.createRange(this.pages,this.pages,this.len)
+        this.range = this.createRange(this.pages,this.pages,this.len)
         this.show();
     },
     createRange: function (page, pages, len) {
