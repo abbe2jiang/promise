@@ -21,8 +21,8 @@ public class CommentVo {
   private ReplyVo reply;
   private String date;
 
-  private static DateFormat dateFormat = new SimpleDateFormat("MMM dd, YYYY");
-  private static DateFormat timeFormat = new SimpleDateFormat("h:mm a");
+  private static DateFormat dateFormat = new SimpleDateFormat("YYYY年MM月dd日");
+  private static DateFormat timeFormat = new SimpleDateFormat("HH时mm分");
 
   public static CommentVo of(Comment comment, Author author) {
     CommentVo vo = new CommentVo();
@@ -33,7 +33,7 @@ public class CommentVo {
     vo.reply = createReplyVo(comment);
     String date = dateFormat.format(new Date(comment.getTime()));
     String time = timeFormat.format(new Date(comment.getTime()));
-    vo.date = date + " at " + time;
+    vo.date = date + " " + time;
     return vo;
   }
 

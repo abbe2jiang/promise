@@ -188,15 +188,17 @@ public class BlogController {
     Date now = new Date();
     String date = dateFormat.format(now);
     String time = timeFormat.format(now);
-    String dateTime = date + " at " + time;
+    String dateTime = date + " " + time;
     model.addAttribute("tempTitle", dateTime);
     model.addAttribute("tempContent", dateTime);
 
     return "blog-edit";
   }
 
-  private static DateFormat dateFormat = new SimpleDateFormat("MMM dd, YYYY");
-  private static DateFormat timeFormat = new SimpleDateFormat("h:mm a");
+  // private static DateFormat dateFormat = new SimpleDateFormat("MMM dd, YYYY");
+  // private static DateFormat timeFormat = new SimpleDateFormat("h:mm a");
+  private static DateFormat dateFormat = new SimpleDateFormat("YYYY年MM月dd日");
+  private static DateFormat timeFormat = new SimpleDateFormat("HH时mm分");
 
   @GetMapping("/blog/{id:\\w+}")
   public String showBlog(Model model, @PathVariable String id) {
@@ -214,7 +216,7 @@ public class BlogController {
     Date now = new Date();
     String date = dateFormat.format(now);
     String time = timeFormat.format(now);
-    model.addAttribute("commentDate", date + " at " + time);
+    model.addAttribute("commentDate", date + " " + time);
     return "blog";
   }
 

@@ -22,7 +22,7 @@ public class BlogVo {
   private long comments;
   private String date;
 
-  private static DateFormat dateFormat = new SimpleDateFormat("MMM dd, YYYY");
+  private static DateFormat dateFormat = new SimpleDateFormat("YYYY年MM月dd日");
 
   public static BlogVo of(Blog blog, Author author, Category category) {
     return of(blog, author, category, false);
