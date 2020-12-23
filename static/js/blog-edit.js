@@ -105,6 +105,9 @@
         window.posted = true;
         var success = function (data) {
             if (data.success) {
+                localStorage.homePage = 1;
+                localStorage.categoryPage = 1;
+                localStorage.userPage = 1;
                 location.href = "/";
             } else {
                 showMessage('fail');
@@ -182,18 +185,16 @@
             </div>
           </div>
         */
-        var html = '<div class="row mb-5"  id="_image_div_' + fileNo + '">\n';
+        var html = '<div class="row mb-5" contenteditable="false"  id="_image_div_' + fileNo + '">\n';
 
         for (var i = 0; i < items.length; i++) {
-            // var col = i == 0 && items.length % 2 == 1 ? "col-md-12" : "col-md-6";
-            var col = "col-md-12";
+            var col = i == 0 && (items.length % 2 == 1) ? "col-md-12" : "col-md-6";
+            // var col = "col-md-12";
             html += '<div class="' + col + ' mb-4">\n' +
                 '<img src="' + items[i].url + '"  alt="Image" class="img-fluid" id="' + items[i].id + '">\n' +
                 '</div>\n';
         }
         html += '</div><p><br/></p>'
-
-
         execCommandOnElement(obj, 'insertHTML', html);
         obj.focus();
     }

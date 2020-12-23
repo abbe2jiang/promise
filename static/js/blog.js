@@ -86,6 +86,9 @@
     function postComment() {
         var success = function (data) {
             if(data.success){
+                localStorage.homePage = 1;
+                localStorage.categoryPage = 1;
+                localStorage.userPage = 1;
                 window.location.reload();
                 // showMessage('success');
                 //
