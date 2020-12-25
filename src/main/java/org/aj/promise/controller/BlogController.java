@@ -21,6 +21,7 @@ import org.aj.promise.service.blog.BlogService;
 import org.aj.promise.service.category.CategoryService;
 import org.aj.promise.service.image.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,9 @@ import static org.aj.promise.constant.TitleConstant.TITLE_NOTES;
 public class BlogController {
 
   private String TEMP_IMAGE_DIR = "/images/temp/";
+
+  @Value("${mediasoupurl:}")
+  String mediasoupurl;
 
   @Autowired
   BlogService blogService;
@@ -55,6 +59,13 @@ public class BlogController {
   public Author myself(Author myself) {
     return myself;
   }
+  
+
+  @ModelAttribute("mediasoupurl")
+  public String mediasoupurl() {
+    return mediasoupurl;
+  }
+
 
   @ModelAttribute("titleNote")
   public String titleNote(Author myself) {
