@@ -38,7 +38,7 @@
             if (data.success) {
                 var categories = data.data;
                 if (categories.length == 0) {
-                    categories.push({id: 'Default', name: 'Default'});
+                    categories.push({ id: 'Default', name: 'Default' });
                 }
                 var html = "";
                 var template = HTemplate(function () {/*
@@ -65,7 +65,7 @@
             }
             var url = window.URL.createObjectURL(file);
             $("#_blog_profile").attr("src", url);
-            uploadImages([{id: '_blog_profile', file: file}]);
+            uploadImages([{ id: '_blog_profile', file: file }]);
         })
     })
 
@@ -82,7 +82,7 @@
               <input type="file" id="_file_${fileNo}"  multiple >
             */
         })
-        var html = template({fileNo: window.fileNo});
+        var html = template({ fileNo: window.fileNo });
         $('#_files').append(html);
     });
 
@@ -96,7 +96,7 @@
         if (window.uploadImageNo != window.uploadedImageNo) {
             // var no = window.uploadImageNo - window.uploadedImageNo;
             // showMessage(no + "images are uploading")
-            setLoaderMsg("uploading images:"+window.uploadedImageNo+"/"+window.uploadImageNo);
+            setLoaderMsg("uploading images:" + window.uploadedImageNo + "/" + window.uploadImageNo);
             return;
         }
         if (window.posted) {
@@ -117,7 +117,7 @@
         var category = $("#_blog_category").val();
         var title = $("#_blog_title").html();
         var content = $("#_blog_content").html();
-        var data = {profile: profile, category: category, title: title, content: content};
+        var data = { profile: profile, category: category, title: title, content: content };
         HAjax.jsonPost("/blog", data, success);
     }
 
@@ -129,7 +129,7 @@
         }
     }
 
-    function uploadImage(item){
+    function uploadImage(item) {
         var formData = new FormData();
         formData.append('upload', item.file);
         $.ajax({
@@ -163,7 +163,7 @@
             }
             var url = window.URL.createObjectURL(file);
             var id = url.substring(url.lastIndexOf("/") + 1);
-            var item = {id: id, url: url, file: file, no: fileNo};
+            var item = { id: id, url: url, file: file, no: fileNo };
             items.push(item);
         }
         insertImages(dev, items, fileNo);
@@ -186,17 +186,38 @@
           </div>
         */
         var html = '<div class="row mb-5" contenteditable="false"  id="_image_div_' + fileNo + '">\n';
-
+        let colNums = getColNums(items.length)
         for (var i = 0; i < items.length; i++) {
-            var col = i == 0 && (items.length % 2 == 1) ? "col-md-12" : "col-md-6";
-            // var col = "col-md-12";
-            html += '<div class="' + col + ' mb-4">\n' +
-                '<img src="' + items[i].url + '"  alt="Image" class="img-fluid" id="' + items[i].id + '">\n' +
-                '</div>\n';
+            console.info(items[i])
+            // var col = i == 0 && (items.length % 2 == 1) ? "col-md-12" : "col-md-6";
+            var col = "col-md-" + colNums[i];
+            let ismp4 = items[i].file.type == "video/mp4";
+            let mediaSrc = '<img src="' + items[i].url + '"  alt="Image" class="img-fluid" id="' + items[i].id + '">\n';
+            if (ismp4) {
+                mediaSrc = '<video width="auto" controls class="img-fluid" id="' + items[i].id + '">\n' +
+                    '<source th:src="' + items[i].url + '" type="video/mp4">\n' +
+                    '</video>\n'
+            }
+            html += '<div class="' + col + ' mb-4">\n' + mediaSrc + '</div>\n';
         }
         html += '</div><p><br/></p>'
         execCommandOnElement(obj, 'insertHTML', html);
         obj.focus();
+    }
+
+    function getColNums(len) {
+        let lst = [];
+        for (let i = 0; i < len; i++) {
+            let half = i + 1 == len ? false : Math.floor(Math.random() * 10) > 2;
+            if (half) {
+                lst.push(6);
+                lst.push(6);
+                i++;
+            } else {
+                lst.push(12);
+            }
+        }
+        return lst;
     }
 
 
