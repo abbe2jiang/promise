@@ -55,7 +55,7 @@
         HAjax.jsonGet("/category", success);
     }
 
-    $("#_blog_profile").on("click", function () {
+    $("#_media_profile").on("click", function () {
         $("#_file_blog_profile").click();
         $("#_file_blog_profile").change(function () {
             var file = this.files[0];
@@ -64,7 +64,15 @@
                 return;
             }
             var url = window.URL.createObjectURL(file);
-            $("#_blog_profile").attr("src", url);
+            let ismp4 = isVideo(file);
+            let html = '<img src="'+url+'" id="_blog_profile" alt="Image" class="img-fluid mb-5">'
+            if(ismp4){
+                html = '<video width="auto" controls class="img-fluid mb-5" id="_blog_profile">\n' +
+                    '<source src="' + url + '" type="video/mp4">\n' +
+                    '</video>\n'
+            }
+            // $("#_blog_profile").attr("src", url);
+            $("#_media_profile").html(html);
             uploadImages([{ id: '_blog_profile', file: file }]);
         })
     })
@@ -191,11 +199,11 @@
             console.info(items[i])
             // var col = i == 0 && (items.length % 2 == 1) ? "col-md-12" : "col-md-6";
             var col = "col-md-" + colNums[i];
-            let ismp4 = items[i].file.type == "video/mp4";
+            let ismp4 = isVideo(items[i]);
             let mediaSrc = '<img src="' + items[i].url + '"  alt="Image" class="img-fluid" id="' + items[i].id + '">\n';
             if (ismp4) {
                 mediaSrc = '<video width="auto" controls class="img-fluid" id="' + items[i].id + '">\n' +
-                    '<source th:src="' + items[i].url + '" type="video/mp4">\n' +
+                    '<source src="' + items[i].url + '" type="video/mp4">\n' +
                     '</video>\n'
             }
             html += '<div class="' + col + ' mb-4">\n' + mediaSrc + '</div>\n';
@@ -203,6 +211,10 @@
         html += '</div><p><br/></p>'
         execCommandOnElement(obj, 'insertHTML', html);
         obj.focus();
+    }
+
+    function isVideo(file){
+        return file.type == "video/mp4";
     }
 
     function getColNums(len) {

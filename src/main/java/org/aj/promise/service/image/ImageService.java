@@ -1,11 +1,16 @@
 package org.aj.promise.service.image;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
+
+import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +23,9 @@ import org.aj.promise.properties.ImageProperties;
 import org.aj.promise.service.storage.StorageException;
 import org.aj.promise.service.storage.StorageFileNotFoundException;
 import org.aj.promise.service.storage.StorageService;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.Java2DFrameConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -73,6 +81,48 @@ public class ImageService {
     return null;
   }
 
+  public String videoThumbnail(String url) {
+    try {
+      String[] items = url.split(IMAGE_SIGN);
+      if (items.length != 2) {
+        return null;
+      }
+      String host = items[0];
+      String relativeSrcFile = Paths.get(IMAGE_SIGN, items[1]).toString();
+      int index = relativeSrcFile.lastIndexOf(".");
+      String relativeDestFile =  relativeSrcFile.substring(0, index) + "-thumbnail.jpg";
+
+      String absoluteSrcFile = storageService.getPath(Paths.get(relativeSrcFile)).toString();
+      String absoluteDestFile = storageService.getPath(Paths.get(relativeDestFile)).toString();
+
+      FFmpegFrameGrabber fFmpegFrameGrabber = new FFmpegFrameGrabber(absoluteSrcFile);
+      fFmpegFrameGrabber.start();
+
+      Frame frame = null;
+      int frameLen = fFmpegFrameGrabber.getLengthInFrames();
+      for (int i = 0; i <= 5 && i < frameLen; i++) {
+        frame = fFmpegFrameGrabber.grabImage();
+      }
+      if (frame != null) {
+        Java2DFrameConverter converter = new Java2DFrameConverter();
+        BufferedImage bufferedImage = converter.getBufferedImage(frame);
+        File outPut = new File(absoluteDestFile);
+        ImageIO.write(bufferedImage, "jpg", outPut);
+      }
+      fFmpegFrameGrabber.stop();
+      fFmpegFrameGrabber.close();
+      return host + relativeDestFile;
+    } catch (Exception e) {
+      log.error("loadImage video failed", e);
+      return null;
+    }
+  }
+
+  public boolean isVideo(String url) {
+    int i = url.lastIndexOf(".");
+    return i > 0 && Objects.equals(".mp4", url.substring(i, url.length()));
+  }
+
   public String thumbnail(String url, double scale) {
     try {
       String[] items = url.split(IMAGE_SIGN);
@@ -118,4 +168,5 @@ public class ImageService {
     int i = srcFile.lastIndexOf(".");
     return srcFile.substring(0, i) + "-thumbnail" + srcFile.substring(i, srcFile.length());
   }
+
 }

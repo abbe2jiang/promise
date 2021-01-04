@@ -59,13 +59,11 @@ public class BlogController {
   public Author myself(Author myself) {
     return myself;
   }
-  
 
   @ModelAttribute("mediasoupurl")
   public String mediasoupurl() {
     return mediasoupurl;
   }
-
 
   @ModelAttribute("titleNote")
   public String titleNote(Author myself) {
@@ -80,10 +78,15 @@ public class BlogController {
 
     String url = blogRequest.profile;
     Image profile = Image.builder().url(url).build();
-    String compressUrl;
+    String compressUrl = null;
     if (url.indexOf(TEMP_IMAGE_DIR) > -1) {
       int index = url.lastIndexOf('.');
       compressUrl = url.substring(0, index) + "-thumbnail" + url.substring(index);
+    } else if (imageService.isVideo(url)) {
+      String imageUrl = imageService.videoThumbnail(url);
+      profile.setVideoUrl(url);
+      profile.setUrl(imageUrl);
+      profile.setCompressUrl(imageUrl);
     } else {
       compressUrl = imageService.thumbnail(url, 0.5);
     }

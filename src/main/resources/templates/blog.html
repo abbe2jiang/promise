@@ -16,7 +16,13 @@
         <div class="row blog-entries element-animate">
 
           <div class="col-md-12 col-lg-8 main-content">
-            <img th:src="${blog.profile.url}" alt="Image" class="img-fluid mb-5">
+            
+            <div th:switch="${blog.profile.videoUrl==null}">
+              <img th:case="true" th:src="${blog.profile.url}" alt="Image" class="img-fluid mb-5">
+              <video th:case="false" width="auto" controls class="img-fluid mb-5" >
+                <source th:src="${blog.profile.videoUrl}" type="video/mp4">
+              </video>
+            </div>
             <div class="post-meta">
               <span class="author mr-2"><img th:src="${blog.author.portrait!=null?blog.author.portrait.url:''}"
                   alt="author" class="mr-2"> <span th:text="${blog.author.firstName}">name</span></span>&bullet;

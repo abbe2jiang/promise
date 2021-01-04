@@ -40,9 +40,11 @@ public class FileSystemStorageService implements StorageService {
       }
 
       Path relativePath = path.resolve(fileName);
-
+      Path filePath = this.rootLocation.resolve(relativePath);
+      if(Files.exists(filePath)){
+        return relativePath;
+      }
       try (InputStream inputStream = file.getInputStream()) {
-        Path filePath = this.rootLocation.resolve(relativePath);
         log.info("copy file:{}", filePath.toString());
         Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
       }

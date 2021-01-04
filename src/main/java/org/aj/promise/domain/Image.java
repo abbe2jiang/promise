@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class Image {
   private String url;
   private String compressUrl;
+  private String videoUrl;
 
   public String getCompressUrl() {
     return compressUrl == null ? url : compressUrl;
