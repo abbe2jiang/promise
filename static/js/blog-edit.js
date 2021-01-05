@@ -14,6 +14,7 @@
 
     initText("_blog_title", window.initTitle, "");
     // initText("_blog_content", window.initContent, "");
+    moveEnd(window.contentDiv)
 
     function initText(id, showText, initText) {
         $("#" + id).on("focus", function () {
@@ -65,8 +66,8 @@
             }
             var url = window.URL.createObjectURL(file);
             let ismp4 = isVideo(file);
-            let html = '<img src="'+url+'" id="_blog_profile" alt="Image" class="img-fluid mb-5">'
-            if(ismp4){
+            let html = '<img src="' + url + '" id="_blog_profile" alt="Image" class="img-fluid mb-5">'
+            if (ismp4) {
                 html = '<video width="auto" controls class="img-fluid mb-5" id="_blog_profile">\n' +
                     '<source src="' + url + '" type="video/mp4">\n' +
                     '</video>\n'
@@ -79,6 +80,7 @@
 
     $("#_insert_image").on("click", function () {
         $("#_blog_content").focus();
+
         $('#_file_' + window.fileNo).click();
         $('#_file_' + window.fileNo).change(function () {
             var items = showImage(this, window.contentDiv, window.fileNo);
@@ -193,13 +195,13 @@
             </div>
           </div>
         */
-        var html = '<div class="row mb-5" contenteditable="false"  id="_image_div_' + fileNo + '">\n';
+        var html = '<div class="row mb-5"  id="_image_div_' + fileNo + '">\n';
         let colNums = getColNums(items.length)
         for (var i = 0; i < items.length; i++) {
             console.info(items[i])
             // var col = i == 0 && (items.length % 2 == 1) ? "col-md-12" : "col-md-6";
             var col = "col-md-" + colNums[i];
-            let ismp4 = isVideo(items[i]);
+            let ismp4 = isVideo(items[i].file);
             let mediaSrc = '<img src="' + items[i].url + '"  alt="Image" class="img-fluid" id="' + items[i].id + '">\n';
             if (ismp4) {
                 mediaSrc = '<video width="auto" controls class="img-fluid" id="' + items[i].id + '">\n' +
@@ -209,11 +211,12 @@
             html += '<div class="' + col + ' mb-4">\n' + mediaSrc + '</div>\n';
         }
         html += '</div><p><br/></p>'
-        execCommandOnElement(obj, 'insertHTML', html);
+        // execCommandOnElement(obj, 'insertHTML', html);
+        insertCont(obj, html)
         obj.focus();
     }
 
-    function isVideo(file){
+    function isVideo(file) {
         return file.type == "video/mp4";
     }
 
@@ -232,6 +235,55 @@
         return lst;
     }
 
+    function moveEnd(el, type) {
+        el.focus();
+        if (window.getSelection) {               //ie11 10 9 ff safari
+            var range = window.getSelection();     //创建range
+            range.selectAllChildren(el);           //选择el子项
+            if (type == 'start') {
+                range.collapseToStart();             //光标移至开头
+            } else {
+                range.collapseToEnd();               //光标移至最后
+            }
+        }
+        else if (document.selection) {                  //ie10 9 8 7 6 5
+            var range = document.selection.createRange(); //创建选择对象
+            range.moveToElementText(el);                  //range定位到ele
+            if (type == 'start') {
+                range.collapse();                           //光标移至开头
+            } else {
+                range.collapse(false);                      //光标移至最后
+            }
+            range.select();
+        }
+    }
+    function insertCont(el, html) {
+        el.focus();
+        if (document.selection) {   //IE 10,9,8,7                             
+            document.selection.createRange().pasteHTML(html);
+        } else if (window.getSelection) {
+            var sel = window.getSelection();
+
+            if (sel.getRangeAt && sel.rangeCount) {
+                var range = sel.getRangeAt(0);
+                range.deleteContents();
+                var div = document.createElement("div");
+                div.innerHTML = html;
+                var frag = document.createDocumentFragment(), node, lastNode;
+                while ((node = div.firstChild)) {
+                    lastNode = frag.appendChild(node);
+                }
+                range.insertNode(frag);
+                if (lastNode) {
+                    range = range.cloneRange();
+                    range.setStartAfter(lastNode);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            }
+        }
+    }
 
     function execCommandOnElement(el, commandName, value) {
         if (typeof value == "undefined") {
