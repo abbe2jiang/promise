@@ -86,7 +86,7 @@ public class BlogController {
       String imageUrl = imageService.videoThumbnail(url);
       profile.setVideoUrl(url);
       profile.setUrl(imageUrl);
-      profile.setCompressUrl(imageUrl);
+      compressUrl = imageService.thumbnail(imageUrl, 0.5);
     } else {
       compressUrl = imageService.thumbnail(url, 0.5);
     }

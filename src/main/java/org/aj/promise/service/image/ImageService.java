@@ -90,7 +90,7 @@ public class ImageService {
       String host = items[0];
       String relativeSrcFile = Paths.get(IMAGE_SIGN, items[1]).toString();
       int index = relativeSrcFile.lastIndexOf(".");
-      String relativeDestFile =  relativeSrcFile.substring(0, index) + "-thumbnail.jpg";
+      String relativeDestFile =  relativeSrcFile.substring(0, index) + "-video.jpg";
 
       String absoluteSrcFile = storageService.getPath(Paths.get(relativeSrcFile)).toString();
       String absoluteDestFile = storageService.getPath(Paths.get(relativeDestFile)).toString();
