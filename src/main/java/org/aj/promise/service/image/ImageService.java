@@ -125,11 +125,11 @@ public class ImageService {
 
   public boolean isVideo(String url) {
     int i = url.lastIndexOf(".");
-    if(i<0){
+    if (i < 0) {
       return false;
     }
     String suffix = url.substring(i, url.length()).toLowerCase();
-    return Objects.equals(".mp4", suffix)||Objects.equals(".mov", suffix);
+    return Objects.equals(".mp4", suffix) || Objects.equals(".mov", suffix);
   }
 
   public Path urlToPath(String url) {
@@ -141,43 +141,35 @@ public class ImageService {
     return path;
   }
 
-  public String thumbnail(String url, double scale) {
+  public String thumbnail(String url, double scale) throws IOException {
     if (url.indexOf(TEMP_IMAGE_DIR) > -1) {
       int index = url.lastIndexOf('.');
       return url.substring(0, index) + "-thumbnail" + url.substring(index);
     }
-    try {
-      String[] items = url.split(IMAGE_SIGN);
-      if (items.length == 2) {
-        String host = items[0];
 
-        String relativeSrcFile = Paths.get(IMAGE_SIGN, items[1]).toString();
-        String relativeDestFile = getDestFile(relativeSrcFile);
+    String relativeSrcFile = urlToPath(url).toString();
+    String relativeDestFile = getDestFile(relativeSrcFile);
 
-        String absoluteSrcFile = storageService.getPath(Paths.get(relativeSrcFile)).toString();
-        String absoluteDestFile = storageService.getPath(Paths.get(relativeDestFile)).toString();
+    String absoluteSrcFile = storageService.getPath(Paths.get(relativeSrcFile)).toString();
+    String absoluteDestFile = storageService.getPath(Paths.get(relativeDestFile)).toString();
 
-        // 避免 iOS 旋转
-        BufferedImage image = Thumbnails.of(absoluteSrcFile).useExifOrientation(true).scale(1).asBufferedImage();
+    // 避免 iOS 旋转
+    BufferedImage image = Thumbnails.of(absoluteSrcFile).useExifOrientation(true).scale(1).asBufferedImage();
 
-        int width = 350;
-        int height = 220;
-        double rate = (double) height / width;
-        int rWidth = image.getWidth();
-        int rHeight = image.getHeight();
-        if ((double) rHeight / rWidth > rate) { // 太高
-          rHeight = (int) (rWidth * rate);
-        } else { // 太宽
-          rWidth = (int) (rHeight / rate);
-        }
-        Thumbnails.of(image).sourceRegion(Positions.CENTER, rWidth, rHeight).forceSize(width, height)
-            .toFile(absoluteDestFile);
-        return host + relativeDestFile;
-      }
-    } catch (IOException e) {
-      log.error("loadImage image failed", e);
+    int width = 350;
+    int height = 220;
+    double rate = (double) height / width;
+    int rWidth = image.getWidth();
+    int rHeight = image.getHeight();
+    if ((double) rHeight / rWidth > rate) { // 太高
+      rHeight = (int) (rWidth * rate);
+    } else { // 太宽
+      rWidth = (int) (rHeight / rate);
     }
-    return null;
+    Thumbnails.of(image).sourceRegion(Positions.CENTER, rWidth, rHeight).forceSize(width, height)
+        .toFile(absoluteDestFile);
+    return imageHost + relativeDestFile;
+
   }
 
   @AllArgsConstructor

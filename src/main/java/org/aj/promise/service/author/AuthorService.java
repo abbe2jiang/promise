@@ -1,5 +1,6 @@
 package org.aj.promise.service.author;
 
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 
@@ -16,6 +17,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class AuthorService {
 
@@ -48,9 +52,13 @@ public class AuthorService {
 
   public void updateByUsername(String username, String portrait, String firstName, String lastName, String brief) {
     Image image = Image.builder().url(portrait).build();
-    String compressUrl = imageService.thumbnail(portrait, 0.25);
-    if (compressUrl != null) {
-      image.setCompressUrl(compressUrl);
+    try {
+      String compressUrl = imageService.thumbnail(portrait, 0.25);
+      if (compressUrl != null) {
+        image.setCompressUrl(compressUrl);
+      }
+    } catch (IOException e) {
+      log.info("updateByUsername thumbnail error,username={},portrait{}", username, portrait, e);
     }
 
     Update update = Update.update("portrait", image).set("firstName", firstName).set("lastName", lastName)

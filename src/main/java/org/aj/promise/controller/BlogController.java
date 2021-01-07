@@ -1,5 +1,6 @@
 package org.aj.promise.controller;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class BlogController {
 
   @PostMapping("/blog")
   @ResponseBody
-  public Response<Object> addBlog(@RequestBody BlogRequest blogRequest, Author user) {
+  public Response<Object> addBlog(@RequestBody BlogRequest blogRequest, Author user) throws IOException {
     Category category = categoryService.getOrDefault(blogRequest.category, getDefaultCategory(user));
 
     String url = blogRequest.profile;
