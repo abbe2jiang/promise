@@ -7,5 +7,5 @@ storage.location: uploadDir
 
 spring.data.mongodb.uri: mongodb://127.0.0.1:27017/we
 
-spring.servlet.multipart.max-file-size: 10MB
-spring.servlet.multipart.max-request-size: 10MB
+spring.servlet.multipart.max-file-size: 100MB
+spring.servlet.multipart.max-request-size: 100MB

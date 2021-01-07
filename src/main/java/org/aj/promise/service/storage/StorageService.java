@@ -10,5 +10,7 @@ public interface StorageService {
 
   Resource load(Path path) throws StorageFileNotFoundException;
 
+  boolean exists(Path path);
+
   Path getPath(Path path);
 }

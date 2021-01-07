@@ -16,12 +16,9 @@
         <div class="row blog-entries element-animate">
 
           <div class="col-md-12 col-lg-8 main-content">
-            
-            <div th:switch="${blog.profile.videoUrl==null}">
-              <img th:case="true" th:src="${blog.profile.url}" alt="Image" class="img-fluid mb-5">
-              <video th:case="false" width="auto" controls class="img-fluid mb-5" >
-                <source th:src="${blog.profile.videoUrl}" type="video/mp4">
-              </video>
+            <input id="_profile_videoUrl" th:if="${blog.profile.videoUrl}" type="hidden"  th:value="${blog.profile.videoUrl}" />
+            <div id="_media_profile">
+              <img th:src="${blog.profile.url}" alt="Image" class="img-fluid mb-5">
             </div>
             <div class="post-meta">
               <span class="author mr-2"><img th:src="${blog.author.portrait!=null?blog.author.portrait.url:''}"
@@ -109,7 +106,7 @@
 
 
   <script src="/js/main.js"></script>
-  <script src="/js/blog.js?v=1"></script>
+  <script src="/js/blog.js?v=1.1"></script>
   <script type="text/javascript">
 
   </script>

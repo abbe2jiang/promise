@@ -1,6 +1,5 @@
 package org.aj.promise.controller;
 
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,8 +30,6 @@ import static org.aj.promise.constant.TitleConstant.TITLE_NOTES;
 
 @Controller
 public class BlogController {
-
-  private String TEMP_IMAGE_DIR = "/images/temp/";
 
   @Value("${mediasoupurl:}")
   String mediasoupurl;
@@ -79,17 +76,13 @@ public class BlogController {
     String url = blogRequest.profile;
     Image profile = Image.builder().url(url).build();
     String compressUrl = null;
-    if (url.indexOf(TEMP_IMAGE_DIR) > -1) {
-      int index = url.lastIndexOf('.');
-      compressUrl = url.substring(0, index) + "-thumbnail" + url.substring(index);
-    } else if (imageService.isVideo(url)) {
-      String imageUrl = imageService.videoThumbnail(url);
+    if (imageService.isVideo(url)) {
       profile.setVideoUrl(url);
-      profile.setUrl(imageUrl);
-      compressUrl = imageService.thumbnail(imageUrl, 0.5);
-    } else {
-      compressUrl = imageService.thumbnail(url, 0.5);
+      url = imageService.getVideoPoster(url);
+      profile.setUrl(url);
     }
+    compressUrl = imageService.thumbnail(url, 0.5);
+
     if (compressUrl != null) {
       profile.setCompressUrl(compressUrl);
     }
@@ -194,9 +187,7 @@ public class BlogController {
   public String blog(Model model, Author user) {
     commonSidebarModel(model, user);
 
-    int num = random.nextInt(20);
-    String url = Paths.get(TEMP_IMAGE_DIR, num + ".jpeg").toString();
-    // String url = String.format("/image/temp/%d.jpeg", num);
+    String url = imageService.getDefaultProfileImageUrl();
     model.addAttribute("profileImage", url);
 
     Date now = new Date();

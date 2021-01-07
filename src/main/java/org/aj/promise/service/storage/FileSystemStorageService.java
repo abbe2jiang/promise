@@ -41,7 +41,7 @@ public class FileSystemStorageService implements StorageService {
 
       Path relativePath = path.resolve(fileName);
       Path filePath = this.rootLocation.resolve(relativePath);
-      if(Files.exists(filePath)){
+      if (Files.exists(filePath)) {
         return relativePath;
       }
       try (InputStream inputStream = file.getInputStream()) {
@@ -67,6 +67,12 @@ public class FileSystemStorageService implements StorageService {
     } catch (MalformedURLException e) {
       throw new StorageFileNotFoundException("Could not read file: " + filePath, e);
     }
+  }
+
+  @Override
+  public boolean exists(Path path) {
+    Path filePath = getPath(path);
+    return Files.exists(filePath);
   }
 
   @Override

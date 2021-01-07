@@ -1,13 +1,31 @@
-(function($) {
+(function ($) {
 
     // document.getElementById("_blog_comment").contentEditable = "true";
     window.commentMap = {};
 
+
+    showTitleVideo();
     loadComments();
 
-    function loadComments(){
+
+    function showTitleVideo() {
+
+        let url = $("#_profile_videoUrl").val();
+        let i = url.lastIndexOf(".")
+        if (i > 0) {
+            let prefix = url.substr(0, i);
+            let suffix = url.substr(i);
+            let compression = prefix + "_compression" + suffix;
+            let html = '<video th:case="false" width="auto" controls preload class="img-fluid mb-5" >';
+            html += '<source src="' + compression + '" type="video/mp4">'
+            html += '<source src="' + url + '" type="video/mp4">'
+            html += '</video>'
+            url = $("#_media_profile").html(html);
+        }
+    }
+    function loadComments() {
         var success = function (data) {
-            if(data.success){
+            if (data.success) {
                 var comments = data.data;
                 var template = HTemplate(function () {/*
                       <li class="comment">
@@ -27,12 +45,12 @@
                       </li>
                     */
                 })
-                for(var i=0;i<comments.length;i++){
+                for (var i = 0; i < comments.length; i++) {
                     var item = comments[i];
-                    if(window.commentMap[item.id] == undefined) {
+                    if (window.commentMap[item.id] == undefined) {
                         item['replyDiv'] = "true";
-                        if(item['reply'] == null){
-                            item['reply'] = {authorName:'',content:'',date:''};
+                        if (item['reply'] == null) {
+                            item['reply'] = { authorName: '', content: '', date: '' };
                             item['replyDiv'] = "none";
                         }
                         window.commentMap[item.id] = item;
@@ -49,11 +67,11 @@
             }
         }
         var blogId = $("#_blog_id").val();
-        HAjax.jsonGet("/comment/"+blogId,success);
+        HAjax.jsonGet("/comment/" + blogId, success);
     }
 
 
-    function replayComment(commentId){
+    function replayComment(commentId) {
         var template = HTemplate(function () {/*
                 <!--<div class="replyDiv rounded" id="_blog_reply_div">-->
                 <div class="meta2">${author.firstName} ${author.lastName} published ${date}</div>
@@ -85,7 +103,7 @@
 
     function postComment() {
         var success = function (data) {
-            if(data.success){
+            if (data.success) {
                 localStorage.homePage = 1;
                 localStorage.categoryPage = 1;
                 localStorage.userPage = 1;
@@ -102,8 +120,8 @@
         var replyId = $("#_blog_reply_id").val();
         var content = $("#_blog_comment").val();
 
-        var comment = {blogId:blogId,replyId:replyId,content:content};
-        HAjax.jsonPost("/comment",comment,success);
+        var comment = { blogId: blogId, replyId: replyId, content: content };
+        HAjax.jsonPost("/comment", comment, success);
     }
 
     function showMessage(msg) {

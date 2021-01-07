@@ -68,13 +68,14 @@
             let ismp4 = isVideo(file);
             let html = '<img src="' + url + '" id="_blog_profile" alt="Image" class="img-fluid mb-5">'
             if (ismp4) {
-                html = '<video width="auto" controls class="img-fluid mb-5" id="_blog_profile">\n' +
-                    '<source src="' + url + '" type="video/mp4">\n' +
+                html = '<video width="auto" controls class="img-fluid mb-5">\n' +
+                    '<source id="_blog_profile_vid1" src="' + url + '" type="video/mp4">\n' +
+                    '<source id="_blog_profile" src="' + url + '" type="video/mp4">\n' +
                     '</video>\n'
             }
             // $("#_blog_profile").attr("src", url);
             $("#_media_profile").html(html);
-            uploadImages([{ id: '_blog_profile', file: file }]);
+            uploadImages([{ id: '_blog_profile', file: file, vid1: "_blog_profile_vid1", vid2: "_blog_profile_vid2" }]);
         })
     })
 
@@ -155,6 +156,16 @@
             success: function (obj) {
                 if (obj.success) {
                     $("#" + item.id).attr("src", obj.url);
+                    let url = obj.url
+                    let i = url.lastIndexOf(".")
+                    if (i > 0) {
+                        let prefix = url.substr(0, i);
+                        let suffix = url.substr(i);
+                        let compression = prefix + "_compression" + suffix;
+                        $("#" + item.vid1).attr("src", compression);
+                        $("#" + item.vid2).attr("src", url);
+                    }
+
                     window.uploadedImageNo += 1;
                 } else {
                     alert("upload error")
@@ -173,7 +184,7 @@
             }
             var url = window.URL.createObjectURL(file);
             var id = url.substring(url.lastIndexOf("/") + 1);
-            var item = { id: id, url: url, file: file, no: fileNo };
+            var item = { id: id, url: url, file: file, no: fileNo, vid1: id + "_vid1", vid2: id + "_vid2" };
             items.push(item);
         }
         insertImages(dev, items, fileNo);
@@ -204,8 +215,9 @@
             let ismp4 = isVideo(items[i].file);
             let mediaSrc = '<img src="' + items[i].url + '"  alt="Image" class="img-fluid" id="' + items[i].id + '">\n';
             if (ismp4) {
-                mediaSrc = '<video width="auto" controls class="img-fluid" id="' + items[i].id + '">\n' +
-                    '<source src="' + items[i].url + '" type="video/mp4">\n' +
+                mediaSrc = '<video width="auto" controls class="img-fluid">\n' +
+                    '<source id="' + items[i].vid1 + '" src="' + items[i].url + '" type="video/mp4">\n' +
+                    '<source id="' + items[i].vid2 + '" src="' + items[i].url + '" type="video/mp4">\n' +
                     '</video>\n'
             }
             html += '<div class="' + col + ' mb-4">\n' + mediaSrc + '</div>\n';
