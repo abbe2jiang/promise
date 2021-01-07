@@ -125,7 +125,11 @@ public class ImageService {
 
   public boolean isVideo(String url) {
     int i = url.lastIndexOf(".");
-    return i > 0 && Objects.equals(".mp4", url.substring(i, url.length()));
+    if(i<0){
+      return false;
+    }
+    String suffix = url.substring(i, url.length()).toLowerCase();
+    return Objects.equals(".mp4", suffix)||Objects.equals(".mov", suffix);
   }
 
   public Path urlToPath(String url) {

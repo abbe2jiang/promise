@@ -229,7 +229,7 @@
     }
 
     function isVideo(file) {
-        return file.type == "video/mp4";
+        return file.type == "video/mp4" || file.type == "video/quicktime";
     }
 
     function getColNums(len) {
