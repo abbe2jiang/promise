@@ -96,7 +96,7 @@ public class VideoService {
         String compressionFile = storageService.getPath(Paths.get(compressionUrl)).toString();
         String tempFile = getVideoTempCompressionFile(srcUrl);
 
-        String[] compressCmd = { "ffmpeg", "-i", srcFile, "-b", "640k", "-y", tempFile };
+        String[] compressCmd = { "ffmpeg", "-i", srcFile, "-b:v", "1600K", "-y", tempFile };
         int result = runShell(compressCmd);
         if (result == 0) {
             String[] rmCmd = { "mv", "-f", tempFile, compressionFile };
