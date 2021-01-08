@@ -248,25 +248,30 @@
     }
 
     function moveEnd(el, type) {
-        el.focus();
-        if (window.getSelection) {               //ie11 10 9 ff safari
-            var range = window.getSelection();     //创建range
-            range.selectAllChildren(el);           //选择el子项
-            if (type == 'start') {
-                range.collapseToStart();             //光标移至开头
-            } else {
-                range.collapseToEnd();               //光标移至最后
+        try {
+
+            el.focus();
+            if (window.getSelection) {               //ie11 10 9 ff safari
+                var range = window.getSelection();     //创建range
+                range.selectAllChildren(el);           //选择el子项
+                if (type == 'start') {
+                    range.collapseToStart();             //光标移至开头
+                } else {
+                    range.collapseToEnd();               //光标移至最后
+                }
             }
-        }
-        else if (document.selection) {                  //ie10 9 8 7 6 5
-            var range = document.selection.createRange(); //创建选择对象
-            range.moveToElementText(el);                  //range定位到ele
-            if (type == 'start') {
-                range.collapse();                           //光标移至开头
-            } else {
-                range.collapse(false);                      //光标移至最后
+            else if (document.selection) {                  //ie10 9 8 7 6 5
+                var range = document.selection.createRange(); //创建选择对象
+                range.moveToElementText(el);                  //range定位到ele
+                if (type == 'start') {
+                    range.collapse();                           //光标移至开头
+                } else {
+                    range.collapse(false);                      //光标移至最后
+                }
+                range.select();
             }
-            range.select();
+        } catch (error) {
+            console.error(error);
         }
     }
     function insertCont(el, html) {
