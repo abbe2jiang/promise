@@ -46,16 +46,16 @@ public class VideoService {
         compress();
     }
 
-    private void compress() {
+    private synchronized void  compress() {
+        if (IS_RUN) {
+            return;
+        }
+        IS_RUN = true;
         exportMessagePool.submit(() -> doCompress());
     }
 
     private void doCompress() {
         try {
-            if (IS_RUN) {
-                return;
-            }
-            IS_RUN = true;
             while (true) {
                 Page<Video> page = videoMongoRepository.findAllByState(State.Pending, PageRequest.of(0, 10));
                 if (page.getContent().size() == 0) {

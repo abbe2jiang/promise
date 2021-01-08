@@ -14,7 +14,7 @@
 
     initText("_blog_title", window.initTitle, "");
     // initText("_blog_content", window.initContent, "");
-    moveEnd(window.contentDiv)
+    // moveEnd(window.contentDiv)
 
     function initText(id, showText, initText) {
         $("#" + id).on("focus", function () {
