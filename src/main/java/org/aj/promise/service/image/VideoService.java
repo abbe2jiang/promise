@@ -146,13 +146,13 @@ public class VideoService {
         try {
             log.info("start shell cmd={}", StringUtils.join(cmd, " "));
             process = Runtime.getRuntime().exec(cmd);
-            process.waitFor();
-            result = process.exitValue();
             BufferedReader bufrError = new BufferedReader(new InputStreamReader(process.getErrorStream(), "UTF-8"));
             String line = null;
             while ((line = bufrError.readLine()) != null) {
                 log.info(line);
             }
+            process.waitFor();
+            result = process.exitValue();
         } catch (Exception e) {
             log.error("runShell error,cmd={}", cmd, e);
         } finally {
