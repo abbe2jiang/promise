@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 
 import java.awt.image.BufferedImage;
@@ -103,11 +104,11 @@ public class ImageService {
   }
 
   public String getVideoPoster(String url) {
-    String posterUrl = videoService.getVideoPosterUrl(url);
-    if (!storageService.exists(urlToPath(posterUrl))) {
-      posterUrl = getDefaultProfileImageUrl();
+    Optional<Path> opt = videoService.createPoster(urlToPath(url));
+    if (opt.isPresent()) {
+      return imageHost + opt.get().toString();
     }
-    return posterUrl;
+    return getDefaultProfileImageUrl();
   }
 
   public Resource loadImage(String path) {

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,10 +41,6 @@ public class VideoService {
     private ExecutorService exportMessagePool = Executors.newFixedThreadPool(2);
 
     public void addVideo(String url) {
-        int state = createPoster(url);
-        if (state != 0) {
-            return;
-        }
         Video video = Video.of(url);
         videoMongoRepository.save(video);
         compress();
@@ -77,15 +74,22 @@ public class VideoService {
         }
     }
 
-    private int createPoster(String url) {
-        String posterUrl = getVideoPosterUrl(url);
+    public Optional<Path> createPoster(Path videoPath) {
+        Path posterPath = getVideoPosterPath(videoPath);
 
-        String srcFile = storageService.getPath(Paths.get(url)).toString();
-        String posterFile = storageService.getPath(Paths.get(posterUrl)).toString();
+        Path srcFile = storageService.getPath(videoPath);
+        Path posterFile = storageService.getPath(posterPath);
+        if (storageService.exists(posterFile)) {
+            return Optional.of(posterPath);
+        }
 
         // ffmpeg -i 'b.mp4' -ss 00:00:01.000 -y -vframes 1 'thumb.png'
-        String[] cmd = { "ffmpeg", "-i", srcFile, "-ss", "00:00:01.000", "-y", "-vframes", "1", posterFile };
-        return runShell(cmd);
+        String[] cmd = { "ffmpeg", "-i", srcFile.toString(), "-ss", "00:00:01.000", "-y", "-vframes", "1",
+                posterFile.toString() };
+        if (runShell(cmd) == 0) {
+            return Optional.of(posterPath);
+        }
+        return Optional.empty();
     }
 
     private int createCompress(Video video) throws IOException {
@@ -133,10 +137,11 @@ public class VideoService {
         return VIDEA_TEMP_PATH.resolve(name).toString();
     }
 
-    public String getVideoPosterUrl(String videoUrl) {
+    private Path getVideoPosterPath(Path videoPath) {
+        String videoUrl = videoPath.toString();
         int index = videoUrl.lastIndexOf(".");
         String posterUrl = videoUrl.substring(0, index) + POSTER_SUFFIX;
-        return posterUrl;
+        return Paths.get(posterUrl);
     }
 
     private int runShell(String[] cmd) {
