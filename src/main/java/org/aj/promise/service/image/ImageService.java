@@ -90,10 +90,6 @@ public class ImageService {
   }
 
   public boolean exists(Path path) {
-    if (isVideo(path.toString())) {
-      String originalUrl = videoService.getVideoOriginalUrl(path.toString());
-      path = urlToPath(originalUrl);
-    }
     return storageService.exists(path);
   }
 

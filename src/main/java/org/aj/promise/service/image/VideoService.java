@@ -1,8 +1,10 @@
 package org.aj.promise.service.image;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,8 +31,10 @@ public class VideoService {
     private StorageService storageService;
 
     private String COMPRESSION_SIGN = "_compression";
-    private String ORIGINAL_SIGN = "_original";
     private String POSTER_SUFFIX = "_poster.png";
+    private String VIDEA_TEMP_DIR = "vedio/temp";
+
+    private Path VIDEA_TEMP_PATH = null;
 
     private volatile boolean IS_RUN = false;
     private ExecutorService exportMessagePool = Executors.newFixedThreadPool(2);
@@ -50,22 +54,27 @@ public class VideoService {
     }
 
     private void doCompress() {
-        if (IS_RUN) {
-            return;
-        }
-        IS_RUN = true;
-        while (true) {
-            Page<Video> page = videoMongoRepository.findAllByState(State.Pending, PageRequest.of(0, 10));
-            if (page.getContent().size() == 0) {
-                break;
+        try {
+            if (IS_RUN) {
+                return;
             }
-            for (Video item : page.getContent()) {
-                log.info("begin compressing video id={}", item.getId());
-                int result = createCompress(item);
-                log.info("end compressing video id={},result={}", item.getId(), result);
+            IS_RUN = true;
+            while (true) {
+                Page<Video> page = videoMongoRepository.findAllByState(State.Pending, PageRequest.of(0, 10));
+                if (page.getContent().size() == 0) {
+                    break;
+                }
+                for (Video item : page.getContent()) {
+                    log.info("begin compressing video id={}", item.getId());
+                    int result = createCompress(item);
+                    log.info("end compressing video id={},result={}", item.getId(), result);
+                }
             }
+        } catch (Exception e) {
+            log.error("doCompress error", e);
+        } finally {
+            IS_RUN = false;
         }
-        IS_RUN = false;
     }
 
     private int createPoster(String url) {
@@ -79,25 +88,23 @@ public class VideoService {
         return runShell(cmd);
     }
 
-    private int createCompress(Video video) {
+    private int createCompress(Video video) throws IOException {
         String srcUrl = video.getSourceUrl();
         String compressionUrl = getVideoCompressionUrl(srcUrl);
-        String originalUrl = getVideoOriginalUrl(srcUrl);
 
         String srcFile = storageService.getPath(Paths.get(srcUrl)).toString();
         String compressionFile = storageService.getPath(Paths.get(compressionUrl)).toString();
-        String originalFile = storageService.getPath(Paths.get(originalUrl)).toString();
+        String tempFile = getVideoTempCompressionFile(srcUrl);
 
-        String[] compressCmd = { "ffmpeg", "-i", srcFile, "-b", "640k", "-y", compressionFile };
+        String[] compressCmd = { "ffmpeg", "-i", srcFile, "-b", "640k", "-y", tempFile };
         int result = runShell(compressCmd);
         if (result == 0) {
-            String[] rmCmd = { "mv", srcFile, originalFile };
+            String[] rmCmd = { "mv", "-f", tempFile, compressionFile };
             result = runShell(rmCmd);
         }
-        if (result == 0 && Files.exists(Paths.get(compressionFile)) && Files.exists(Paths.get(originalFile))) {
+        if (result == 0 && Files.exists(Paths.get(compressionFile))) {
             video.setState(State.Success);
             video.setCompressionUrl(compressionUrl);
-            video.setOriginalUrl(originalUrl);
         } else {
             video.setState(State.Fail);
         }
@@ -112,10 +119,18 @@ public class VideoService {
         return compressionUrl;
     }
 
-    public String getVideoOriginalUrl(String videoUrl) {
-        int index = videoUrl.lastIndexOf(".");
-        String compressionUrl = videoUrl.substring(0, index) + ORIGINAL_SIGN + videoUrl.substring(index);
-        return compressionUrl;
+    private String getVideoTempCompressionFile(String videoUrl) throws IOException {
+        if (VIDEA_TEMP_PATH == null) {
+            Path path = storageService.getPath(Paths.get(VIDEA_TEMP_DIR));
+            if (Files.notExists(path)) {
+                log.info("create video temp directories: {}", path);
+                Files.createDirectories(path);
+            }
+            VIDEA_TEMP_PATH = path;
+        }
+        int index = videoUrl.lastIndexOf("/");
+        String name = videoUrl.substring(index + 1);
+        return VIDEA_TEMP_PATH.resolve(name).toString();
     }
 
     public String getVideoPosterUrl(String videoUrl) {
@@ -127,18 +142,14 @@ public class VideoService {
     private int runShell(String[] cmd) {
         int result = -1;
         Process process = null;
+        long start = System.currentTimeMillis();
         try {
-            log.info("-----------------start shell cmd: {}-----------------", StringUtils.join(cmd, " "));
+            log.info("start shell cmd={}", StringUtils.join(cmd, " "));
             process = Runtime.getRuntime().exec(cmd);
             process.waitFor();
             result = process.exitValue();
-            BufferedReader bufrIn = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
             BufferedReader bufrError = new BufferedReader(new InputStreamReader(process.getErrorStream(), "UTF-8"));
-
             String line = null;
-            while ((line = bufrIn.readLine()) != null) {
-                log.info(line);
-            }
             while ((line = bufrError.readLine()) != null) {
                 log.info(line);
             }
@@ -149,7 +160,8 @@ public class VideoService {
                 process.destroy();
             }
         }
-        log.info("-----------------end shell cmd: {} state={}-----------------", StringUtils.join(cmd, " "), result);
+        log.info("end shell time={} state={} cmd={} ", System.currentTimeMillis() - start, result,
+                StringUtils.join(cmd, " "));
         return result;
     }
 }

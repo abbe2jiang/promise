@@ -13,7 +13,6 @@ public class Video {
   private String id;
   private String sourceUrl;
   private String compressionUrl;
-  private String originalUrl;
   @Indexed
   private State state;
   private long createdTime;
