@@ -51,7 +51,8 @@ public class VideoService {
             return;
         }
         IS_RUN = true;
-        exportMessagePool.submit(() -> doCompress());
+        // exportMessagePool.submit(() -> doCompress());
+        new Thread(()->doCompress()).start();;
     }
 
     private void doCompress() {
