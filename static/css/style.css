@@ -833,9 +833,9 @@ textarea.form-control {
     display: inline-block; }
     .pagination li a {
       border-radius: 50% !important;
-      width: 35px;
-      height: 35px;
-      line-height: 35px;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
       padding: 0;
       margin: 0;
       display: inline-block;
