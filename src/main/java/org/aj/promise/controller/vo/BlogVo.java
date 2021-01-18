@@ -42,7 +42,7 @@ public class BlogVo {
     return vo;
   }
 
-  private static DateFormat dateFormat = new SimpleDateFormat("YY.MM.dd");
+  private static DateFormat dateFormat = new SimpleDateFormat("YY年MM月dd日");
 
   public static String getFormatDate(long time) {
     Date date = new Date(time);
