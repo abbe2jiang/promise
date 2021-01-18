@@ -11,6 +11,9 @@
     function showTitleVideo() {
 
         let url = $("#_profile_videoUrl").val();
+        if(!url){
+            return;
+        }
         let i = url.lastIndexOf(".")
         if (i > 0) {
             let prefix = url.substr(0, i);
