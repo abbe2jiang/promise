@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,18 +20,36 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@EnableScheduling
 public class VideoService {
     @Autowired
     VideoMongoRepository videoMongoRepository;
 
     @Autowired
     private StorageService storageService;
+
+    @Scheduled(fixedRate = 10 * 60 * 1000)
+    private void clearInvalidSession() {
+        List<Video> lst = new ArrayList<>();
+        Page<Video> page = videoMongoRepository.findAllByState(State.Fail, PageRequest.of(0, 10));
+        for (Video item : page.getContent()) {
+            item.setState(State.Pending);
+            lst.add(item);
+        }
+        if (lst.isEmpty()) {
+            return;
+        }
+        videoMongoRepository.saveAll(lst);
+        compress();
+    }
 
     private String COMPRESSION_SIGN = "_compression";
     private String POSTER_SUFFIX = "_poster.png";
@@ -46,13 +66,12 @@ public class VideoService {
         compress();
     }
 
-    private synchronized void  compress() {
+    private synchronized void compress() {
         if (IS_RUN) {
             return;
         }
         IS_RUN = true;
-        // exportMessagePool.submit(() -> doCompress());
-        new Thread(()->doCompress()).start();;
+        exportMessagePool.submit(() -> doCompress());
     }
 
     private void doCompress() {
