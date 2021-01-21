@@ -38,16 +38,12 @@ public class VideoService {
 
     @Scheduled(fixedRate = 10 * 60 * 1000)
     private void clearInvalidSession() {
-        List<Video> lst = new ArrayList<>();
         Page<Video> page = videoMongoRepository.findAllByState(State.Fail, PageRequest.of(0, 10));
         for (Video item : page.getContent()) {
             item.setState(State.Pending);
-            lst.add(item);
+            item.setUpdateTime(System.currentTimeMillis());
+            videoMongoRepository.save(item);
         }
-        if (lst.isEmpty()) {
-            return;
-        }
-        videoMongoRepository.saveAll(lst);
         compress();
     }
 
