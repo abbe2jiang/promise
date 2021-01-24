@@ -49,7 +49,7 @@ public class BlogController {
 
   @ModelAttribute("popularBlogs")
   public List<BlogVo> getPopularBlogs() {
-    List<Blog> popularBlogs = blogService.getPopularBlogs(3);
+    List<Blog> popularBlogs = blogService.getPopularBlogs(5);
     return blogVoOf(popularBlogs);
   }
 
