@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @Data
 @Builder
 public class Blog {
+  public static String INDEX = "blog";
+  public static String ID = "id";
+  public static String CONTENT = "content";
   @Id
   private String id;
   @Indexed

@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
 import lombok.Data;
 
 import org.aj.promise.controller.vo.BlogVo;
@@ -20,6 +23,7 @@ import org.aj.promise.service.author.AuthorService;
 import org.aj.promise.service.blog.BlogService;
 import org.aj.promise.service.category.CategoryService;
 import org.aj.promise.service.image.ImageService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -245,5 +249,17 @@ public class BlogController {
     Author author = authorService.getAuthorById(blog.getAuthorId());
     Category category = categoryService.getCategoryById(blog.getCategoryId());
     return Response.succeed(BlogVo.of(blog, author, category));
+  }
+
+  @GetMapping("/search")
+  public String searchBlogs(HttpServletRequest request, Model model, Author user) {
+    commonSidebarModel(model, user);
+    String s = request.getParameter("s");
+    List<Blog> blogs = new ArrayList<>();
+    if (StringUtils.isNotBlank(s)) {
+      blogs = blogService.searchBlogs(s);
+    }
+    model.addAttribute("searchBlogs", blogVoOf(blogs));
+    return "search";
   }
 }

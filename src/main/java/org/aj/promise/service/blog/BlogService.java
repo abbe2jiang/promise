@@ -7,6 +7,7 @@ import org.aj.promise.controller.Pagination;
 import org.aj.promise.domain.Blog;
 import org.aj.promise.repository.BlogMongoRepository;
 import org.aj.promise.repository.CommentMongoRepository;
+import org.aj.promise.service.search.LucencService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,16 +27,26 @@ public class BlogService {
   CommentMongoRepository commentMongoRepository;
 
   @Autowired
+  LucencService lucencService;
+
+  @Autowired
   private MongoTemplate template;
 
   public Blog add(Blog blog) {
-    return blogMongoRepository.save(blog);
+    blog = blogMongoRepository.save(blog);
+    lucencService.addBlogIndex(blog);
+    return blog;
   }
 
   public Pagination<Blog> getBlogs(Pageable pageable) {
     Query query = new Query();
     query.with(new Sort(Sort.Direction.DESC, "updateTime"));
     return basePagination(pageable, query);
+  }
+
+  public List<Blog> searchBlogs(String s) {
+    List<String>ids = lucencService.searchBlogIds(s);
+    return blogMongoRepository.findAllByIdIn(ids);
   }
 
   public Pagination<Blog> getBlogsByAuthorId(Pageable pageable, String authorId) {

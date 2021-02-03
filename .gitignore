@@ -4,6 +4,7 @@
 /target
 /src/local
 /uploadDir
+/indexDir
 /log
 
 # Compiled class file
