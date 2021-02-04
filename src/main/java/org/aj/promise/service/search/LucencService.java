@@ -1,6 +1,6 @@
 package org.aj.promise.service.search;
 
-import java.io.IOException;
+import java.io.StringReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -8,6 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.parser.ParserDelegator;
 
 import org.aj.promise.domain.Blog;
 import org.aj.promise.domain.Comment;
@@ -55,7 +58,7 @@ public class LucencService {
             doc.setId(blog.getId());
             doc.add(new TextField(Blog.ID, blog.getId(), Field.Store.YES));
             String content = blog.getTitle() + " " + blog.getContent();
-            doc.add(new TextField(Blog.CONTENT, content, Field.Store.NO));
+            doc.add(new TextField(Blog.CONTENT, getTextFromHtml(content), Field.Store.NO));
         });
     }
 
@@ -64,8 +67,25 @@ public class LucencService {
             doc.setId(comment.getId());
             doc.add(new TextField(Blog.ID, comment.getId(), Field.Store.NO));
             doc.add(new StringField(Comment.BLOG_ID, comment.getBlogId(), Field.Store.YES));
-            doc.add(new TextField(Comment.CONTENT, comment.getContent(), Field.Store.NO));
+            doc.add(new TextField(Comment.CONTENT, getTextFromHtml(comment.getContent()), Field.Store.NO));
         });
+    }
+
+    private String getTextFromHtml(String html) {
+        try {
+            StringReader in = new StringReader(html);
+            StringBuffer buffer = new StringBuffer();
+            ParserDelegator delegator = new ParserDelegator();
+            delegator.parse(in, new HTMLEditorKit.ParserCallback() {
+                public void handleText(char[] text, int pos) {
+                    buffer.append(text);
+                }
+            }, Boolean.TRUE);
+            return buffer.toString().replace("\\n", "");
+        } catch (Exception e) {
+            log.error("getTextFromHtml error", e);
+            return html;
+        }
     }
 
     private void writeIndex(String index, Consumer<MyDocument> fun) {
@@ -84,7 +104,7 @@ public class LucencService {
                 writer.addDocument(doc.doc);
             }
             writer.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("writeIndex error", e);
         }
     }
