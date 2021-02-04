@@ -12,9 +12,16 @@
     window.initTitle = $("#_blog_title").html();
     window.initContent = $("#_blog_content").html();
 
-    initText("_blog_title", window.initTitle, "");
-    // initText("_blog_content", window.initContent, "");
-    // moveEnd(window.contentDiv)
+    init();
+
+    function init() {
+        let blogId = $("#_blog_original_id").val();
+        if (!blogId) {
+            initText("_blog_title", window.initTitle, "");
+            // initText("_blog_content", window.initContent, "");
+        }
+        initCategory();
+    }
 
     function initText(id, showText, initText) {
         $("#" + id).on("focus", function () {
@@ -32,7 +39,7 @@
     }
 
 
-    initCategory();
+
 
     function initCategory() {
 
