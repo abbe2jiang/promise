@@ -1,0 +1,34 @@
+# deploy project
+---
+
+- hosts: we
+  tasks:
+  - name: Create elasticsearch data directory
+    file:
+      name: "/workspace/note/"
+      state: directory
+      owner: we
+      group: we
+    become: yes
+
+  - name: copy jar
+    copy:
+      src: "../target/we-1.0-SNAPSHOT.jar"
+      dest: '/workspace/note/note.jar'
+      owner: we
+      group: we
+    become: yes
+
+  - name: copy static
+    synchronize:
+      src: "../static/"
+      dest: '/workspace/note/static'
+      dirs: yes
+    become: yes
+
+  - name: restart service
+    service:
+      name: note
+      state: restarted
+      enabled: yes
+    become: yes
