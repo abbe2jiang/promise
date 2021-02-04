@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -78,7 +79,35 @@ public class BlogController {
   public Response<Object> addBlog(@RequestBody BlogRequest blogRequest, Author user) throws IOException {
     Category category = categoryService.getOrDefault(blogRequest.category, getDefaultCategory(user));
 
-    String url = blogRequest.profile;
+    Blog blog = null;
+
+    if (StringUtils.isNotBlank(blogRequest.blogId)) {
+      blog = blogService.getBlog(blogRequest.blogId);
+      if (blog != null && !Objects.equals(blog.getAuthorId(), user.getId())) {
+        blog = null;
+      }
+    }
+
+    Image profile = getProfile(blog, blogRequest.profile);
+    if (blog == null) {
+      blog = Blog.builder().authorId(user.getId()).time(System.currentTimeMillis()).build();
+    }
+
+    blog.setProfile(profile);
+    blog.setTitle(blogRequest.title);
+    blog.setCategoryId(category.getId());
+    blog.setContent(blogRequest.content);
+    blog.setUpdateTime(System.currentTimeMillis());
+
+    blogService.add(blog);
+    categoryService.updateCount(category.getId());
+    return Response.succeed(null);
+  }
+
+  private Image getProfile(Blog blog, String url) throws IOException {
+    if (blog != null && Objects.equals(blog.getProfile().getUrl(), url)) {
+      return blog.getProfile();
+    }
     Image profile = Image.builder().url(url).build();
     String compressUrl = null;
     if (imageService.isVideo(url)) {
@@ -91,13 +120,7 @@ public class BlogController {
     if (compressUrl != null) {
       profile.setCompressUrl(compressUrl);
     }
-
-    Blog blog = Blog.builder().authorId(user.getId()).profile(profile).categoryId(category.getId())
-        .title(blogRequest.title).content(blogRequest.content).time(System.currentTimeMillis())
-        .updateTime(System.currentTimeMillis()).build();
-    blogService.add(blog);
-    categoryService.updateCount(category.getId());
-    return Response.succeed(null);
+    return profile;
   }
 
   @GetMapping("/blogs/{page:\\d+}")
@@ -156,6 +179,7 @@ public class BlogController {
 
   @Data
   static class BlogRequest {
+    String blogId;
     String profile;
     String category;
     String title;
@@ -201,7 +225,24 @@ public class BlogController {
     String dateTime = date + " " + time;
     model.addAttribute("tempTitle", dateTime);
     model.addAttribute("tempContent", dateTime);
+    return "blog-edit";
+  }
 
+  @GetMapping("/blog-edit/{id:\\w+}")
+  public String blog(Model model, Author user, @PathVariable String id) {
+    commonSidebarModel(model, user);
+    Blog blog = blogService.getBlog(id);
+    if (blog == null || !Objects.equals(blog.getAuthorId(), user.getId())) {
+      return "error";
+    }
+
+    String url = blog.getProfile().getUrl();
+    model.addAttribute("profileImage", url);
+
+    model.addAttribute("tempTitle", blog.getTitle());
+    model.addAttribute("tempContent", blog.getContent());
+    model.addAttribute("tempCategoryId", blog.getCategoryId());
+    model.addAttribute("blogId", blog.getId());
     return "blog-edit";
   }
 

@@ -28,7 +28,10 @@
             </div>
             <h1 class="mb-4" th:utext="${blog.title}">title</h1>
             <div th:if="${blog.category}">
-              <a class="category mb-5" href="#" th:text="${blog.category.name}">category</a>
+              <p>
+              <a class="category mb-5" th:href="|/category/${blog.category.id}|" th:text="${blog.category.name}">category</a>
+              <a class="category mb-5" th:if="${myself.id == blog.author.id}" th:href="|/blog-edit/${blog.id}|" style="background:white;color:#6610f2 !important"  ><i class="icon-edit"></i></a>
+              </p>
             </div>
 
             <div class="post-content-body" th:utext="${blog.content}">

@@ -15,12 +15,14 @@
         <div class="row blog-entries element-animate">
 
           <div class="col-md-12 col-lg-8 main-content">
-            <div id="_media_profile"><img th:src="${profileImage}" id="_blog_profile" alt="Image" class="img-fluid mb-5"></div>
+            <div id="_media_profile"><img th:src="${profileImage}" id="_blog_profile" alt="Image"
+                class="img-fluid mb-5"></div>
             <h1 class="mb-4" id="_blog_title" th:text="${tempTitle}">click and edit title</h1>
-
+            <input type="hidden" id="_blog_original_id" th:if="${blogId}" th:value="${blogId}" />
             <div class="pt-5">
               <p>
                 分类:
+                <input type="hidden" id="_blog_original_category_id" th:if="${tempCategoryId}" th:value="${tempCategoryId}" />
                 <select id="_blog_category">
                   <option value="Default">Default</option>
                 </select>
@@ -31,9 +33,9 @@
             </div>
 
 
-            <div class="post-content-body" id="_blog_content">
+            <div class="post-content-body" id="_blog_content" th:utext="${tempContent}">
               <!-- blog content template -->
-              <p th:text="${tempContent}">click and edit blog</p>
+              <p>click and edit blog</p>
             </div>
 
           </div>
@@ -78,7 +80,7 @@
 
 
   <script src="/js/main.js?v=3"></script>
-  <script src="/js/blog-edit.js?v=2.91"></script>
+  <script src="/js/blog-edit.js?v=3.0"></script>
 </body>
 
 </html>

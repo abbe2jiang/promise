@@ -35,6 +35,7 @@
     initCategory();
 
     function initCategory() {
+
         var success = function (data) {
             if (data.success) {
                 var categories = data.data;
@@ -51,6 +52,10 @@
                 }
 
                 $("#_blog_category").html(html);
+                let categoryId = $("#_blog_original_category_id").val();
+                if (categoryId) {
+                    $("#_blog_category").val(categoryId);
+                }
             }
         }
         HAjax.jsonGet("/category", success);
@@ -128,7 +133,8 @@
         var category = $("#_blog_category").val();
         var title = $("#_blog_title").html();
         var content = $("#_blog_content").html();
-        var data = { profile: profile, category: category, title: title, content: content };
+        let blogId = $("#_blog_original_id").val();
+        var data = { blogId: blogId, profile: profile, category: category, title: title, content: content };
         HAjax.jsonPost("/blog", data, success);
     }
 
@@ -144,7 +150,7 @@
         var formData = new FormData();
         formData.append('upload', item.file);
         $.ajax({
-            url: "image/upload",
+            url: "/image/upload",
             data: formData,
             type: "POST",
             dataType: "json",
