@@ -1,7 +1,10 @@
 package org.aj.promise.service.blog;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.aj.promise.controller.Pagination;
 import org.aj.promise.domain.Blog;
@@ -45,8 +48,12 @@ public class BlogService {
   }
 
   public List<Blog> searchBlogs(String s) {
-    List<String>ids = lucencService.searchBlogIds(s);
-    return blogMongoRepository.findAllByIdIn(ids);
+    List<String> ids = lucencService.searchBlogIds(s);
+    List<Blog> blogs = blogMongoRepository.findAllByIdIn(ids);
+    Map<String, Blog> map = blogs.stream().collect(Collectors.toMap(Blog::getId, a -> a, (k1, k2) -> k1));
+    List<Blog> lst = new ArrayList<>();
+    ids.forEach(id -> lst.add(map.get(id)));
+    return lst;
   }
 
   public Pagination<Blog> getBlogsByAuthorId(Pageable pageable, String authorId) {

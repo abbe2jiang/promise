@@ -153,7 +153,7 @@ public class LucencService {
     }
 
     public List<String> searchBlogIds(String s) {
-        List<String> lst = new ArrayList<>();
+        ArrayList<String> lst = new ArrayList<>();
         List<String> ids = searchIndex(Blog.INDEX, Blog.CONTENT, s, 30, docs -> {
             List<String> blogIds = new ArrayList<>();
             for (Document doc : docs) {
@@ -175,7 +175,16 @@ public class LucencService {
             }
             return cblogIds;
         });
-        lst.addAll(cids);
+
+        for (int i = cids.size() - 1; i >= 0; i--) {
+            String id = cids.get(i);
+            if (lst.contains(id)) {
+                lst.remove(id);
+                lst.add(0, id);
+            } else {
+                lst.add(id);
+            }
+        }
         return lst;
     }
 }
