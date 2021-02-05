@@ -11,6 +11,9 @@
 
     window.initTitle = $("#_blog_title").html();
     window.initContent = $("#_blog_content").html();
+    window.ContentType = "html";
+
+    window.TempContent = { html: window.initContent, md: "" };
 
     init();
 
@@ -21,7 +24,55 @@
             // initText("_blog_content", window.initContent, "");
         }
         initCategory();
+        initMarkDown();
     }
+
+    function initMarkDown() {
+        let blogId = $("#_blog_original_id").val();
+        if (blogId) {//编辑
+            $("#_markdown_edit").hide();
+            if ($("#_blog_type").val() == "md" && window.ContentType != "md") {
+                $("#_markdown_content").val($("#_blog_content").html());
+                switchMarkDown();
+            }
+        }
+
+        $("#_markdown_content").on("keyup", function () {
+            createMarkDownContent();
+        });
+        $("#_markdown_edit").on("click", function () {
+            switchMarkDown();
+        });
+    }
+
+    function switchMarkDown() {
+        if (window.ContentType == "html") {
+            window.TempContent.html = $("#_blog_content").html();
+
+            window.ContentType = "md";
+            $("#_insert_image").hide();
+            $("#_markdown_content").show();
+            createMarkDownContent();
+            window.contentDiv.contentEditable = "false";
+        } else if (window.ContentType == "md") {
+            window.ContentType = "html";
+            $("#_insert_image").show();
+            $("#_markdown_content").hide();
+            $("#_blog_content").html(window.TempContent.html);
+            window.contentDiv.contentEditable = "true";
+        }
+    }
+
+    function createMarkDownContent() {
+        if (window.ContentType != "md") {
+            return;
+        }
+        var text = document.getElementById("_markdown_content").value;
+        var converter = new showdown.Converter();
+        var html = converter.makeHtml(text);
+        document.getElementById("_blog_content").innerHTML = html;
+    }
+
 
     function initText(id, showText, initText) {
         $("#" + id).on("focus", function () {
@@ -140,8 +191,11 @@
         var category = $("#_blog_category").val();
         var title = $("#_blog_title").html();
         var content = $("#_blog_content").html();
+        if (window.ContentType == "md") {
+            content = $("#_markdown_content").val();
+        }
         let blogId = $("#_blog_original_id").val();
-        var data = { blogId: blogId, profile: profile, category: category, title: title, content: content };
+        var data = { blogId: blogId, profile: profile, category: category, title: title, content: content, type: window.ContentType };
         HAjax.jsonPost("/blog", data, success);
     }
 

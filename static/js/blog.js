@@ -6,12 +6,22 @@
 
     showTitleVideo();
     loadComments();
+    showMarkDown();
 
+    function showMarkDown() {
+        if ($("#_blog_type").val() != "md") {
+            return;
+        }
+        var text = $("#_blog_content").html();
+        var converter = new showdown.Converter();
+        var html = converter.makeHtml(text);
+        $("#_blog_content").html(html);
+    }
 
     function showTitleVideo() {
 
         let url = $("#_profile_videoUrl").val();
-        if(!url){
+        if (!url) {
             return;
         }
         let i = url.lastIndexOf(".")

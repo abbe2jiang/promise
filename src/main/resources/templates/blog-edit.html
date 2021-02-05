@@ -18,20 +18,25 @@
             <div id="_media_profile"><img th:src="${profileImage}" id="_blog_profile" alt="Image"
                 class="img-fluid mb-5"></div>
             <h1 class="mb-4" id="_blog_title" th:text="${tempTitle}">click and edit title</h1>
-            <input type="hidden" id="_blog_original_id" th:if="${blogId}" th:value="${blogId}" />
             <div class="pt-5">
               <p>
                 分类:
-                <input type="hidden" id="_blog_original_category_id" th:if="${tempCategoryId}" th:value="${tempCategoryId}" />
+                <input type="hidden" id="_blog_original_category_id" th:if="${tempCategoryId}"
+                  th:value="${tempCategoryId}" />
                 <select id="_blog_category">
                   <option value="Default">Default</option>
                 </select>
                 操作:
                 <a id="_insert_image" href="javascript:void(0)"><i class="icon-picture"></i></a>
+                <a id="_markdown_edit" href="javascript:void(0)"><i class="icon-edit"></i></a>
                 <a id="_blog_post" href="javascript:void(0)"><i class="icon-save"></i></a>
               </p>
             </div>
-
+            <div th:if="${blog}">
+              <input type="hidden" id="_blog_original_id" th:value="${blog.id}" />
+              <input type="hidden" id="_blog_type" th:value="${blog.type}" />
+            </div>
+            <textarea type="hidden" id="_markdown_content" style="height:300px;width: 100%;display:none"></textarea>
 
             <div class="post-content-body" id="_blog_content" th:utext="${tempContent}">
               <!-- blog content template -->
@@ -80,7 +85,8 @@
 
 
   <script src="/js/main.js?v=3"></script>
-  <script src="/js/blog-edit.js?v=3.01"></script>
+  <script src="/js/showdown.min.js"></script>
+  <script src="/js/blog-edit.js?v=3.1"></script>
 </body>
 
 </html>

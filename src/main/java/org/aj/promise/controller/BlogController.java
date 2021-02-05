@@ -98,6 +98,7 @@ public class BlogController {
     blog.setCategoryId(category.getId());
     blog.setContent(blogRequest.content);
     blog.setUpdateTime(System.currentTimeMillis());
+    blog.setType(blogRequest.type);
 
     blogService.add(blog);
     categoryService.updateCount(category.getId());
@@ -184,6 +185,7 @@ public class BlogController {
     String category;
     String title;
     String content;
+    String type;
   }
 
   @GetMapping("/")
@@ -242,7 +244,7 @@ public class BlogController {
     model.addAttribute("tempTitle", blog.getTitle());
     model.addAttribute("tempContent", blog.getContent());
     model.addAttribute("tempCategoryId", blog.getCategoryId());
-    model.addAttribute("blogId", blog.getId());
+    model.addAttribute("blog", BlogVo.of(blog, user, null));
     return "blog-edit";
   }
 

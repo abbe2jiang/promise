@@ -10,4 +10,5 @@ import lombok.Data;
 @ConfigurationProperties("aj.common")
 public class CommonProperties {
     private String lucenceIndexes = "indexDir";
+    private boolean debug = false;
 }

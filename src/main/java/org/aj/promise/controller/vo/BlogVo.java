@@ -22,6 +22,7 @@ public class BlogVo {
   private String content;
   private long comments;
   private String date;
+  private String type;
 
   public static BlogVo of(Blog blog, Author author, Category category) {
     return of(blog, author, category, false);
@@ -36,6 +37,7 @@ public class BlogVo {
     vo.title = blog.getTitle();
     vo.comments = blog.getComments();
     vo.date = getFormatDate(blog.getTime());
+    vo.type = blog.getType().value();
     if (!simplified) {
       vo.content = blog.getContent();
     }

@@ -16,7 +16,8 @@
         <div class="row blog-entries element-animate">
 
           <div class="col-md-12 col-lg-8 main-content">
-            <input id="_profile_videoUrl" th:if="${blog.profile.videoUrl}" type="hidden"  th:value="${blog.profile.videoUrl}" />
+            <input id="_profile_videoUrl" th:if="${blog.profile.videoUrl}" type="hidden"
+              th:value="${blog.profile.videoUrl}" />
             <div id="_media_profile">
               <img th:src="${blog.profile.url}" alt="Image" class="img-fluid mb-5">
             </div>
@@ -29,12 +30,14 @@
             <h1 class="mb-4" th:utext="${blog.title}">title</h1>
             <div th:if="${blog.category}">
               <p>
-              <a class="category mb-5" th:href="|/category/${blog.category.id}|" th:text="${blog.category.name}">category</a>
-              <a class="category mb-5" th:if="${myself.id == blog.author.id}" th:href="|/blog-edit/${blog.id}|" style="background:white;color:#6610f2 !important"  ><i class="icon-edit"></i></a>
+                <a class="category mb-5" th:href="|/category/${blog.category.id}|"
+                  th:text="${blog.category.name}">category</a>
+                <a class="category mb-5" th:if="${myself.id == blog.author.id}" th:href="|/blog-edit/${blog.id}|"
+                  style="background:white;color:#6610f2 !important"><i class="icon-edit"></i></a>
               </p>
             </div>
-
-            <div class="post-content-body" th:utext="${blog.content}">
+            <input type="hidden" id="_blog_type" th:value="${blog.type}" />
+            <div class="post-content-body" id="_blog_content" th:utext="${blog.content}">
               blog content
             </div>
 
@@ -109,7 +112,8 @@
 
 
   <script src="/js/main.js"></script>
-  <script src="/js/blog.js?v=1.11"></script>
+  <script src="/js/showdown.min.js"></script>
+  <script src="/js/blog.js?v=1.2"></script>
   <script type="text/javascript">
 
   </script>
