@@ -1,6 +1,5 @@
 package org.aj.promise.service.search;
 
-import java.io.StringReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -9,12 +8,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.parser.ParserDelegator;
-
 import org.aj.promise.domain.Blog;
 import org.aj.promise.domain.Comment;
 import org.aj.promise.properties.CommonProperties;
+import org.aj.promise.service.blog.BlogService;
+import org.aj.promise.service.comment.CommentService;
+import org.aj.promise.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
@@ -46,7 +45,17 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class LucencService {
 
+    public static String INDEX = "blog-comment";
+    public static String ID = "id";
+    public static String CONTENT = "content";
+
     private final Path rootLocation;
+
+    @Autowired
+    CommentService commentService;
+
+    @Autowired
+    BlogService blogService;
 
     @Autowired
     public LucencService(CommonProperties properties) {
@@ -54,38 +63,25 @@ public class LucencService {
     }
 
     public void addBlogIndex(Blog blog) {
-        writeIndex(Blog.INDEX, doc -> {
+        doAddBlogIndex(blog);
+    }
+
+    private void doAddBlogIndex(Blog blog) {
+        writeIndex(INDEX, doc -> {
             doc.setId(blog.getId());
-            doc.add(new TextField(Blog.ID, blog.getId(), Field.Store.YES));
+            doc.add(new TextField(ID, blog.getId(), Field.Store.YES));
             String content = blog.getTitle() + " " + blog.getContent();
-            doc.add(new TextField(Blog.CONTENT, getTextFromHtml(content), Field.Store.NO));
+            List<Comment> comments = commentService.getComments(blog.getId());
+            for (Comment comment : comments) {
+                content += " " + comment.getContent();
+            }
+            doc.add(new TextField(CONTENT, CommonUtil.getTextFromHtml(content), Field.Store.NO));
         });
     }
 
     public void addCommentIndex(Comment comment) {
-        writeIndex(Comment.INDEX, doc -> {
-            doc.setId(comment.getId());
-            doc.add(new TextField(Blog.ID, comment.getId(), Field.Store.NO));
-            doc.add(new StringField(Comment.BLOG_ID, comment.getBlogId(), Field.Store.YES));
-            doc.add(new TextField(Comment.CONTENT, getTextFromHtml(comment.getContent()), Field.Store.NO));
-        });
-    }
-
-    private String getTextFromHtml(String html) {
-        try {
-            StringReader in = new StringReader(html);
-            StringBuffer buffer = new StringBuffer();
-            ParserDelegator delegator = new ParserDelegator();
-            delegator.parse(in, new HTMLEditorKit.ParserCallback() {
-                public void handleText(char[] text, int pos) {
-                    buffer.append(text);
-                }
-            }, Boolean.TRUE);
-            return buffer.toString().replace("\\n", "");
-        } catch (Exception e) {
-            log.error("getTextFromHtml error", e);
-            return html;
-        }
+        Blog blog = blogService.getBlog(comment.getBlogId());
+        doAddBlogIndex(blog);
     }
 
     private void writeIndex(String index, Consumer<MyDocument> fun) {
@@ -153,38 +149,15 @@ public class LucencService {
     }
 
     public List<String> searchBlogIds(String s) {
-        ArrayList<String> lst = new ArrayList<>();
-        List<String> ids = searchIndex(Blog.INDEX, Blog.CONTENT, s, 30, docs -> {
+        return searchIndex(INDEX, CONTENT, s, 30, docs -> {
             List<String> blogIds = new ArrayList<>();
             for (Document doc : docs) {
-                String id = doc.get(Blog.ID);
+                String id = doc.get(ID);
                 if (id != null) {
                     blogIds.add(id);
                 }
             }
             return blogIds;
         });
-        lst.addAll(ids);
-        List<String> cids = searchIndex(Comment.INDEX, Comment.CONTENT, s, 30, docs -> {
-            List<String> cblogIds = new ArrayList<>();
-            for (Document doc : docs) {
-                String id = doc.get(Comment.BLOG_ID);
-                if (id != null) {
-                    cblogIds.add(id);
-                }
-            }
-            return cblogIds;
-        });
-
-        for (int i = cids.size() - 1; i >= 0; i--) {
-            String id = cids.get(i);
-            if (lst.contains(id)) {
-                lst.remove(id);
-                lst.add(0, id);
-            } else {
-                lst.add(id);
-            }
-        }
-        return lst;
     }
 }

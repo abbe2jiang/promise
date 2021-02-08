@@ -24,6 +24,7 @@ import org.aj.promise.service.author.AuthorService;
 import org.aj.promise.service.blog.BlogService;
 import org.aj.promise.service.category.CategoryService;
 import org.aj.promise.service.image.ImageService;
+import org.aj.promise.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -94,7 +95,7 @@ public class BlogController {
     }
 
     blog.setProfile(profile);
-    blog.setTitle(blogRequest.title);
+    blog.setTitle(CommonUtil.getTextFromHtml(blogRequest.title));
     blog.setCategoryId(category.getId());
     blog.setContent(blogRequest.content);
     blog.setUpdateTime(System.currentTimeMillis());
@@ -224,9 +225,9 @@ public class BlogController {
     Date now = new Date();
     String date = dateFormat.format(now);
     String time = timeFormat.format(now);
-    String dateTime = "<p>" + date + " " + time + "</p>";
+    String dateTime = date + " " + time;
     model.addAttribute("tempTitle", dateTime);
-    model.addAttribute("tempContent", dateTime);
+    model.addAttribute("tempContent", "<p>" + dateTime + "</p>");
     return "blog-edit";
   }
 

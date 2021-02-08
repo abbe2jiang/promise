@@ -6,11 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class Comment {
-  public static String INDEX = "comment";
-  public static String ID = "id";
-  public static String BLOG_ID = "blogId";
-  public static String CONTENT = "content";
-
   private String id;
   private String blogId;
   private String authorId;
