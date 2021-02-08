@@ -224,7 +224,7 @@ public class BlogController {
     Date now = new Date();
     String date = dateFormat.format(now);
     String time = timeFormat.format(now);
-    String dateTime = date + " " + time;
+    String dateTime = "<p>" + date + " " + time + "</p>";
     model.addAttribute("tempTitle", dateTime);
     model.addAttribute("tempContent", dateTime);
     return "blog-edit";
