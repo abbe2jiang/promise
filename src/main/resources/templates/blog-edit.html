@@ -35,6 +35,7 @@
             <div th:if="${blog}">
               <input type="hidden" id="_blog_original_id" th:value="${blog.id}" />
               <input type="hidden" id="_blog_type" th:value="${blog.type}" />
+              <textarea type="hidden" id="_markdown_content_init" th:text="${blog.content}" style="height:300px;width: 100%;display:none"></textarea>
             </div>
             <textarea type="hidden" id="_markdown_content" style="height:300px;width: 100%;display:none"></textarea>
 
@@ -86,7 +87,7 @@
 
   <script src="/js/main.js?v=3"></script>
   <script src="/js/showdown.min.js"></script>
-  <script src="/js/blog-edit.js?v=3.1"></script>
+  <script src="/js/blog-edit.js?v=3.2"></script>
 </body>
 
 </html>

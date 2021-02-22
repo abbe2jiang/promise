@@ -32,7 +32,7 @@
         if (blogId) {//编辑
             $("#_markdown_edit").hide();
             if ($("#_blog_type").val() == "md" && window.ContentType != "md") {
-                $("#_markdown_content").val($("#_blog_content").html());
+                $("#_markdown_content").val($("#_markdown_content_init").val());
                 switchMarkDown();
             }
         }

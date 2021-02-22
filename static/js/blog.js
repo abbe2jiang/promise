@@ -12,7 +12,7 @@
         if ($("#_blog_type").val() != "md") {
             return;
         }
-        var text = $("#_blog_content").html();
+        var text = $("#_markdown_content").val();
         var converter = new showdown.Converter();
         var html = converter.makeHtml(text);
         $("#_blog_content").html(html);
