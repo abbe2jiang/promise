@@ -49,7 +49,7 @@
                           <h3>${author.firstName} ${author.lastName}</h3>
                           <div class="meta">${date}</div>
                           <div class="replyDiv rounded" style="display: ${replyDiv}">
-                            <div class="meta2">${reply.authorName} 发布于 ${reply.date}</div>
+                            <div class="meta2">${reply.authorName} 发表于 ${reply.date}</div>
                             <p>${reply.content}</p>
                           </div>
                           <p>${content}</p>
@@ -87,7 +87,7 @@
     function replayComment(commentId) {
         var template = HTemplate(function () {/*
                 <!--<div class="replyDiv rounded" id="_blog_reply_div">-->
-                <div class="meta2">${author.firstName} ${author.lastName} 发布于 ${date}</div>
+                <div class="meta2">${author.firstName} ${author.lastName} 发表于 ${date}</div>
                 <p>${content}</p>
                 <!--</div>-->
             */

@@ -55,7 +55,7 @@ public class CommentVo {
     vo.content = reply.getContent();
     String date = dateFormat.format(new Date(reply.getTime()));
     String time = timeFormat.format(new Date(reply.getTime()));
-    vo.date = date + " at " + time;
+    vo.date = date + " " + time;
     return vo;
   }
 
