@@ -24,6 +24,7 @@ import org.aj.promise.service.author.AuthorService;
 import org.aj.promise.service.blog.BlogService;
 import org.aj.promise.service.category.CategoryService;
 import org.aj.promise.service.image.ImageService;
+import org.aj.promise.service.log.OperationLogService;
 import org.aj.promise.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,9 @@ public class BlogController {
 
   @Autowired
   ImageService imageService;
+
+  @Autowired
+  OperationLogService logService;
 
   @ModelAttribute("popularBlogs")
   public List<BlogVo> getPopularBlogs() {
@@ -255,7 +259,7 @@ public class BlogController {
   private static DateFormat timeFormat = new SimpleDateFormat("HH时mm分");
 
   @GetMapping("/blog/{id:\\w+}")
-  public String showBlog(Model model, @PathVariable String id) {
+  public String showBlog(Model model, Author user, @PathVariable String id) {
     model.addAttribute("_blog_id", id);
     Blog blog = blogService.getBlog(id);
     Author author = authorService.getAuthorById(blog.getAuthorId());
@@ -266,6 +270,8 @@ public class BlogController {
     model.addAttribute("relatedBlogs", blogVoOf(relatedBlogs));
 
     commonSidebarModel(model, author);
+
+    logService.addReadLog(user, blog);
 
     Date now = new Date();
     String date = dateFormat.format(now);
