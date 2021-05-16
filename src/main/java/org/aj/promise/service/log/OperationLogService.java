@@ -27,7 +27,6 @@ public class OperationLogService {
   private void addLog(Supplier<OperationLog> fun) {
     try {
       OperationLog olog = fun.get();
-      olog.setCreateDate(new Date());
       logMongoRepository.save(olog);
       log.info("addLog log={}", olog);
     } catch (Exception e) {
