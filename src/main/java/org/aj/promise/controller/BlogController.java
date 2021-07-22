@@ -24,7 +24,7 @@ import org.aj.promise.service.author.AuthorService;
 import org.aj.promise.service.blog.BlogService;
 import org.aj.promise.service.category.CategoryService;
 import org.aj.promise.service.image.ImageService;
-import org.aj.promise.service.log.OperationLogService;
+import org.aj.promise.service.operationlog.OperationLogService;
 import org.aj.promise.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

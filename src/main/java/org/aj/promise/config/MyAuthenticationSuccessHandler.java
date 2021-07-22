@@ -6,9 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.aj.promise.domain.Author;
-import org.aj.promise.domain.OperationLog;
 import org.aj.promise.service.author.AuthorService;
-import org.aj.promise.service.log.OperationLogService;
+import org.aj.promise.service.operationlog.OperationLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;

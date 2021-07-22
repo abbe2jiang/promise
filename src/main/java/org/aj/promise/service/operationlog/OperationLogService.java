@@ -1,6 +1,5 @@
 package org.aj.promise.service.log;
 
-import java.util.Date;
 import java.util.function.Supplier;
 
 import org.aj.promise.domain.Author;
